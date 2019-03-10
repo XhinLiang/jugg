@@ -1,4 +1,4 @@
-package com.xhinliang.jugg.websocket.client;
+package com.xhinliang.jugg;
 
 import java.util.function.Consumer;
 
@@ -85,7 +85,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         logger.error("", cause);
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);

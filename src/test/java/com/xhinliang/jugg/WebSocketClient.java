@@ -1,6 +1,5 @@
-package com.xhinliang.jugg.websocket.client;
+package com.xhinliang.jugg;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
 
@@ -55,7 +54,7 @@ public class WebSocketClient {
         b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
 
             @Override
-            public void initChannel(SocketChannel c) throws Exception {
+            public void initChannel(SocketChannel c) {
                 ChannelPipeline pipeline = c.pipeline();
                 pipeline.addLast("http-codec", new HttpClientCodec());
                 pipeline.addLast("aggregator", new HttpObjectAggregator(65536));
@@ -71,10 +70,10 @@ public class WebSocketClient {
     public void close() throws InterruptedException {
         ch.writeAndFlush(new CloseWebSocketFrame());
         ch.closeFuture().sync();
-        //group.shutdownGracefully();
+        group.shutdownGracefully();
     }
 
-    public void eval(String text) throws IOException {
+    public void eval(String text) {
         ch.writeAndFlush(new TextWebSocketFrame(text));
     }
 }

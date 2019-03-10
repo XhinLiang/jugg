@@ -1,4 +1,4 @@
-package com.xhinliang.jugg.example;
+package com.xhinliang.jugg;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import com.xhinliang.jugg.handler.IJuggInterceptor;
 import com.xhinliang.jugg.handler.JuggAliasHandler;
 import com.xhinliang.jugg.handler.JuggEvalHandler;
+import com.xhinliang.jugg.handler.JuggLoginHandler;
 import com.xhinliang.jugg.loader.FlexibleBeanLoader;
 import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.parse.JuggEvalKiller;
@@ -37,7 +38,7 @@ public final class JuggServerExample {
             @Override
             protected Object getActualBean(String name) {
                 if (name.equals("testBean")) {
-                    return new MockBeanLoader.TestBean();
+                    return new TestBean();
                 }
                 return null;
             }
@@ -53,12 +54,68 @@ public final class JuggServerExample {
 
         List<IJuggInterceptor> handlers = Lists.newArrayList(//
                 context -> logger.info("scope start, command: {}", context.getCommand()),
-//                new JuggLoginHandler((username, password) -> password.equals("1l1l1l")), //
+                new JuggLoginHandler((username, password) -> password.equals("1l1l1l")), //
                 new JuggAliasHandler(beanLoader), //
                 new JuggEvalHandler(evalKiller), //
                 context -> logger.info("scope end"));
 
         JuggWebSocketServer webSocketServer = new JuggWebSocketServer(DEFAULT_PORT, handlers);
         webSocketServer.start();
+    }
+
+    /**
+     * just for mock
+     */
+    static class MockBeanLoader implements IBeanLoader {
+
+        @Override
+        public Object getBeanByName(String name) {
+            return new TestBean();
+        }
+
+        @Nonnull
+        @Override
+        public Class<?> getClassByName(String name) {
+            return TestBean.class;
+        }
+
+        @Override
+        public Object getBeanByClass(@Nonnull Class<?> clazz) {
+            return null;
+        }
+    }
+
+    /**
+     * for test
+     */
+    @SuppressWarnings({ "unused", "WeakerAccess" })
+    static class TestBean {
+
+        private String value = "";
+
+        public String getVal() {
+            return value;
+        }
+
+        public long ping(long val) {
+            return val;
+        }
+
+        public String ping(String val) {
+            return val;
+        }
+
+        public String add(String a, String b) {
+            return a + b;
+        }
+
+        public TestBean append(String raw) {
+            value += raw;
+            return self();
+        }
+
+        public TestBean self() {
+            return this;
+        }
     }
 }

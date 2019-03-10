@@ -1,10 +1,8 @@
-package com.xhinliang.jugg.example;
+package com.xhinliang.jugg;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import com.xhinliang.jugg.websocket.client.WebSocketClient;
 
 class TestWebSocket {
 
@@ -16,14 +14,12 @@ class TestWebSocket {
     void test() throws Exception {
         startServer();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 1; i < 40; i++) {
             String username = "xhinliang" + i;
             new Thread(() -> startClientAndSendEval(username)).start();
         }
 
-        WebSocketClient client = new WebSocketClient("ws://localhost:10010/ws", text -> {
-            System.out.println("receive: " + text);
-        });
+        WebSocketClient client = new WebSocketClient("ws://localhost:10010/ws", text -> System.out.println("receive: " + text));
 
         try {
             client.open();
@@ -32,7 +28,7 @@ class TestWebSocket {
         } catch (Exception e) {
             Assertions.fail("", e);
         }
-        Thread.sleep(5000L);
+        Thread.sleep(3000L);
     }
 
     private void startServer() throws InterruptedException {
@@ -44,7 +40,7 @@ class TestWebSocket {
             }
         });
         serverThread.start();
-        Thread.sleep(1000L);
+        Thread.sleep(5000L);
     }
 
     private void startClientAndSendEval(String username) {
@@ -58,7 +54,7 @@ class TestWebSocket {
         try {
             client.open();
             client.eval("login " + username + " 1l1l1l");
-            client.eval("#xx.ping(\"" + username + "\")");
+            client.eval("#testBean.ping(\"" + username + "\")");
         } catch (Exception e) {
             Assertions.fail("", e);
         }

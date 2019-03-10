@@ -16,7 +16,7 @@
         <jackson.protobuf.version>0.9.10-jackson2.9-proto3</jackson.protobuf.version>
         <!-- Default package. Will be overridden by Maven archetype -->
         <package>com.xhinliang.jugg</package>
-        <mainClass>com.xhinliang.jugg.example.JuggServerExample</mainClass>
+        <mainClass>com.xhinliang.jugg.JuggServerExample</mainClass>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <libs.classpath.prefix>libs</libs.classpath.prefix>
