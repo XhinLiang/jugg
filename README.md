@@ -1,4 +1,7 @@
 # Jugg
+![](https://img.shields.io/crates/l/e.svg) ![](https://img.shields.io/badge/build-pass-brightgreen.svg) ![](https://img.shields.io/badge/language-java-yellowgreen.svg)
+
+![Juggernaut](./docs/Juggernaut.jpg)
 
 `jugg` 是一个 C/S 架构的 `OGNL` 解析器，你可以使用 `jugg` 体验到和 `Python REPL` 类似的 `Java REPL` 体验。
 
