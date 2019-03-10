@@ -22,7 +22,7 @@ import com.xhinliang.jugg.util.ClassFinder;
  * IBeanLoader with flexible calling.
  *
  * FlexibleBeanLoader can auto find Java Class and register it.
- * In most case, you can replace FJCN with SimpleClassName.
+ * In most case, you can replace FQCN with SimpleClassName.
  *
  * for example, you can call `@Maps@newHashMap()` instead of `@com.google.common.collect.Maps@newHashMap()`
  *

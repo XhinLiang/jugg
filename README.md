@@ -205,7 +205,7 @@ done
 
 ### Clients
 
-`Jugg` use plain text `WebSocket` protocol as REPL, 
+`Jugg` use plain text `WebSocket` protocol as `Java REPL`.
 So any `WebSocket` client can be used directly  in theory, even of `wsdump.py`.
 
 We have two offical client now
