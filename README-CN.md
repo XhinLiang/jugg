@@ -3,11 +3,9 @@
 
 ![Juggernaut](./docs/Juggernaut.jpg)
 
-`jugg` is a C/S Structure `OGNL` parser, or can think of it as a `Java REPL`.
+`jugg` 是一个 C/S 架构的 `OGNL` 解析器，你可以使用 `jugg` 体验到和 `Python REPL` 类似的 `Java REPL` 体验。
 
-Feed easy to use `jugg` to debug your Java's program as enjoyable as `Python REPL`.
-
-## Dependency
+## 添加依赖
 
 ```
 <dependency>
@@ -23,23 +21,22 @@ Feed easy to use `jugg` to debug your Java's program as enjoyable as `Python REP
 </dependency>
 ```
 
-## Core Concept
+## 核心概念
 
-We introduce `Jugg`'s core concept by a simple `Spring Boot` project.
+下面以一个简单的 `Spring Boot` 工程来介绍 `Jugg` 的核心概念。
 
-### Core Flow
+### 核心流程
 ![core](docs/jugg.png "ognl core sequence")
 
 ### IBeanLoader
 
-`IBeanLoader` is a interface, We use it to define how to load a `Class` or a objact (We will call it `Bean` in the future).
+`IBeanLoader` 接口定义了加载一个类（我们后面称为 `Class` ）或者一个对象（我们后面称为 `Bean` ）的方法。
 
+通过 `IBeanLoader`，我们可以自由控制 `OGNL` 解析器的类加载和对象加载的逻辑，从而获得更好的操作体验。
 
-With `IBeanLoader`, we have the freedom to control the logic of the `Class` loading and `Bean` loading of the `OGNL` parser for a better operational experience.
+我们提供了一个 `IBeanLoader` 的半实现 `FlexibleBeanLoader`，在 `FlexibleBeanLoader` 中，默认加载了当前 `ClassPath` 内的所有类。通过使用 `FlexibleBeanLoader`，在大部分情况下你可以节省键入类全名的时间。
 
-We provide an flexible implementation of `IBeanLoader` as `FlexibleBeanLoader`.
-
-
+示例：
 ``` java
 public static void main(String[] args) {
     ConfigurableApplicationContext configurableApplicationContext = new SpringApplication(MainApp.class).run(args);
@@ -73,12 +70,11 @@ public static void main(String[] args) {
 ```
 
 ### JuggCommandContext
-
-`JuggCommandContext` is an abstraction of a request, containing information about the user, requesting content, and so on.
+`JuggCommandContext` 是一次请求的抽象，包含用户信息，`command` 内容（`Client` 发送过来的文本）
 
 ### IJuggEvalKiller
 
-`IJuggEvalKiller` decides how to execute a `JuggCommandContext`.
+`IJuggEvalKiller` 决定如何将一个 `JuggCommandContext` 执行。
 
 ``` java
 public interface IJuggEvalKiller {
@@ -94,7 +90,7 @@ public interface IJuggEvalKiller {
 
 ### JuggWebSocketServer
 
-`JuggWebSocketServer` is a `WebSocket` Server for `WebSocket` client's request.
+`JuggWebSocketServer` 是核心的 `WebSocket` 服务器。
 
 ``` java
 JuggWebSocketServer webSocketServer = new JuggWebSocketServer(JUGG_PORT, handlers);
@@ -103,18 +99,18 @@ webSocketServer.startOnNewThread();
 
 ### OGNL
 
-The OGNL syntax is generally similar to the normal Java syntax, but there still are some differences, so please refer to the official documentation.
+OGNL 语法总体来说跟正常的 Java 语法类似，但是有一些不一样的地方，具体可以参考一下官方文档。
 
-[OGNL official documentation](https://commons.apache.org/proper/commons-ognl/language-guide.html)
+
+[OGNL语法指南](https://commons.apache.org/proper/commons-ognl/language-guide.html)
 
 ### More OGNL
+`jugg` 使用 `IBeanLoader` 扩展了 `OGNL`，你可以更方便地使用它。
 
-`Jugg` extends `OGNL` with `IBeanLoader`, which makes it easier to use.
+#### 自动加载 Bean
 
-#### Bean's autoload
-
-With `IBeanLoader`, `Jugg` can automatically load the `Bean`.
-For example, you can combine `Spring` with `Jugg`.
+你可以通过 `IBeanLoader` 自定义 Bean 的加载方法，从而让 `jugg` 能自动加载 Bean。
+例如，你可以结合 `Spring` 来定义加载逻辑。
 ``` java
 ConfigurableApplicationContext configurableApplicationContext = new SpringApplication(MainApp.class).run(args);
 
@@ -138,13 +134,13 @@ IBeanLoader beanLoader = new IBeanLoader() {
             return null;
         }
     }
-    // more
+    // 省略...
 };
 ```
 
 ``` bash
-# userService is a Spring bean
-# u can use it directly, because jugg will call Spring to ininitialize it.
+# userService 是一个 Spring bean
+# 你可以直接使用它，因为 Jugg 会委托 Spring 将它初始化
 > userService.getById(123L)
 {
    "id": 123,
@@ -152,11 +148,11 @@ IBeanLoader beanLoader = new IBeanLoader() {
 }
 ```
 
-#### Use SimpleClassName to call a static method
+#### 使用 SimpleClassName 调用静态方法
 
-`OGNL` needs FQCN(Fullly Qualified Class Name) to call a static method by default, but you can use SimpleClassName in `Jugg`.
+`OGNL` 调用静态方法时需要制定类全名，这里可以通过 `IBeanLoader` 来使用 SimpleClassName 替代
 ``` java
-//  load all the Class of ClassLoader, as map(simpleClassName -> fullyQualifiedClassName)
+// 加载所有 ClassLoader 下的 Class 到 Map 中，存储格式 map(simpleClassName -> fullyQualifiedClassName)
 Map<String, String> clazzMap = new HashMap<>();
 Configuration configuration = new ConfigurationBuilder() //
         .setUrls(Stream.of(ClasspathHelper.forPackage("com"), ClasspathHelper.forPackage("org"), ClasspathHelper.forPackage("net")) //
@@ -182,7 +178,7 @@ IBeanLoader beanLoader = new IBeanLoader() {
             return Class.forName(retryClassName);
         }
     }
-    // more
+    // 省略
 };
 ```
 
@@ -191,9 +187,9 @@ IBeanLoader beanLoader = new IBeanLoader() {
 { }
 ```
 
-#### Alias
+#### 别名
 
-You can customize the name of your `Class` or `Bean` by `alias` command.
+通过 `alias` 命令，你可以自定义 Class 或者 Bean 的别名：
 
 ``` bash
 > alias target M Maps
@@ -203,14 +199,13 @@ done
 { }
 ```
 
-### Clients
+### 关于客户端
 
-`jugg` use plain text `WebSocket` protocol as REPL, 
-So any `WebSocket` client can be used directly  in theory, even of `wsdump.py`.
+`jugg` 通过 `WebSocket` 协议，使用了纯文本 REPL 的方式，所以理论上任何的 `WebSocket` 客户端都能直接使用，甚至可以直接使用 `wsdump.py`（请自行Google）。
 
-We have two offical client now
-- `web` a web client implement by React.
-- `node-client` a cli client implement by Node.js.
+现在实现了两套客户端
+- `web` React 实现的 Web 客户端，通过浏览器访问指定的端口就能使用。
+- `node-client` Node.js 实现的命令行客户端。
 
 ### License
 

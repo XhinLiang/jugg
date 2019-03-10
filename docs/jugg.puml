@@ -1,29 +1,29 @@
 @startuml
-actor "WebSocket客户端" as client
-actor "JuggWebSocket服务器" as server
-database "自定义Handlers" as customHandlers
+actor "WebSocketClient" as client
+actor "JuggWebSocketServer" as server
+database "Custom Handlers" as customHandlers
 database "EvalHandler" as evalHandler
 database "EvalHandler" as evalKiller
-database "Ognl解析器" as ognlParser
+database "Ognl Parser" as ognlParser
 
 
-client -> server : 请求连接 WebSocket
-client -> server : 发送消息（纯文本）
-server -> server : 打包消息为 JuggCommandContext
-server -> customHandlers : 交给自定义 handlers 加工处理，自定义 handlers
+client -> server : connect WebSocket
+client -> server : send plain text message
+server -> server : wrap message as JuggCommandContext
+server -> customHandlers : call customize handlers
 
 opt
-  customHandlers -> server: 自定义handler拦截请求，返回响应
-  server -> client : 返回响应
+  customHandlers -> server: customize handler intercept the request and return a response
+  server -> client : return
 end
 
-customHandlers -> evalHandler: 把消息交给 evalHandler 处理
-evalHandler -> evalKiller: 把消息交给 EvalKiller 处理
-evalKiller -> ognlParser: 把命令交给 OGNL 解析器处理
+customHandlers -> evalHandler: call evalHandler
+evalHandler -> evalKiller: call evalKiller
+evalKiller -> ognlParser: call OGNL parser
 
-ognlParser -> evalKiller: 返回执行结果
-evalKiller -> evalHandler: 返回执行结果
-evalHandler -> server: 返回执行结果
-server -> client: 返回执行结果
+ognlParser -> evalKiller: return
+evalKiller -> evalHandler: return
+evalHandler -> server: return
+server -> client: return
 
 @enduml
