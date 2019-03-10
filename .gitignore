@@ -1,0 +1,34 @@
+# Java Builds
+target/
+build/
+bin/
+.gradle/
+.classpath
+jugg.iml
+
+# WebUI Builds
+tmp/
+
+# WebUI dependencies
+node_modules/
+bower_components/
+
+# IDEs and editors
+**/.idea
+**/.vscode
+.settings/
+
+# misc
+**/.sass-cache
+**/npm-debug.log
+typings/
+
+travis.log
+
+#System Files
+**/.DS_Store
+**/.project
+**/.settings
+**/.classpath
+**/.metadata
+**/Thumbs.db
