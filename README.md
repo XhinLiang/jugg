@@ -3,9 +3,9 @@
 
 ![Juggernaut](./docs/Juggernaut.jpg)
 
-`jugg` is a C/S Structure `OGNL` parser, or can think of it as a `Java REPL`.
+`Jugg` is a C/S Structure `OGNL` parser, or can think of it as a `Java REPL`.
 
-Feed easy to use `jugg` to debug your Java's program as enjoyable as `Python REPL`.
+Feed easy to use `Jugg` to debug your Java's program as enjoyable as `Python REPL`.
 
 ## Dependency
 
@@ -205,7 +205,7 @@ done
 
 ### Clients
 
-`jugg` use plain text `WebSocket` protocol as REPL, 
+`Jugg` use plain text `WebSocket` protocol as REPL, 
 So any `WebSocket` client can be used directly  in theory, even of `wsdump.py`.
 
 We have two offical client now
