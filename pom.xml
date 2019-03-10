@@ -40,6 +40,8 @@
 
     <properties>
         <helidon.version>0.10.4</helidon.version>
+        <junit-jupiter.version>5.0.2</junit-jupiter.version>
+        <junit-platform.version>1.0.2</junit-platform.version>
         <jackson.version>2.9.8</jackson.version>
         <jackson.protobuf.version>0.9.10-jackson2.9-proto3</jackson.protobuf.version>
         <!-- Default package. Will be overridden by Maven archetype -->
