@@ -1,5 +1,5 @@
 # Jugg
-![](https://img.shields.io/crates/l/e.svg) ![](https://img.shields.io/badge/build-pass-brightgreen.svg) ![](https://img.shields.io/badge/language-java-yellowgreen.svg)
+![](https://img.shields.io/badge/license-MIT-blue.svg) ![](https://img.shields.io/badge/build-pass-brightgreen.svg) ![](https://img.shields.io/badge/language-java-yellowgreen.svg)
 
 ![Juggernaut](./docs/Juggernaut.jpg)
 
@@ -209,8 +209,8 @@ done
 So any `WebSocket` client can be used directly  in theory, even of `wsdump.py`.
 
 We have two offical client now
-- `web` a web client implement by React.
-- `node-client` a cli client implement by Node.js.
+- `web` a web client implement by `React`.
+- `node-client` a cli client implement by `Node.js`.
 
 ### License
 
