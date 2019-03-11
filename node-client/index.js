@@ -54,7 +54,7 @@ rl.on("line", input => {
         return;
     }
 
-    if (input.equals("help")) {
+    if (input == "help") {
         oChild.log('[client] jugg is a Java REPL, you can eval your Java Code but don\'t be EVIL!');
         oChild.log(" ");
         oChild.log("connect youWsUrl                         ==== connect another WebSocketServer");

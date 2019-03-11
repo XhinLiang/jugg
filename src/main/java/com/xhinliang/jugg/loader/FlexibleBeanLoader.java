@@ -67,7 +67,12 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
     @Nullable
     @Override
     public Object getBeanByName(String name) {
-        Object bean = getActualBean(name);
+        Object bean = null;
+        try {
+            bean = getActualBean(name);
+        } catch (Exception e) {
+            // pass
+        }
         if (bean == null) {
             String classSimpleName = name.substring(0, 1).toUpperCase() + name.substring(1);
             String className = clazzMap.get(classSimpleName);
