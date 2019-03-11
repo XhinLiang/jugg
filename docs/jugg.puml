@@ -3,7 +3,7 @@ actor "WebSocketClient" as client
 actor "JuggWebSocketServer" as server
 database "Custom Handlers" as customHandlers
 database "EvalHandler" as evalHandler
-database "EvalHandler" as evalKiller
+database "EvalKiller" as evalKiller
 database "Ognl Parser" as ognlParser
 
 
