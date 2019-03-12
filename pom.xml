@@ -44,6 +44,8 @@
         <junit-platform.version>1.0.2</junit-platform.version>
         <jackson.version>2.9.8</jackson.version>
         <jackson.protobuf.version>0.9.10-jackson2.9-proto3</jackson.protobuf.version>
+        <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
+        <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
         <!-- Default package. Will be overridden by Maven archetype -->
         <package>com.xhinliang.jugg</package>
         <mainClass>com.xhinliang.jugg.JuggServerExample</mainClass>
@@ -359,6 +361,26 @@
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
+                    
+                                <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+                         
+                                     <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>${coveralls-maven-plugin.version}</version>
+            </plugin>
                 </plugins>
             </build>
 
