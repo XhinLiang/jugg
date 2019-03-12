@@ -105,6 +105,7 @@ OGNL 语法总体来说跟正常的 Java 语法类似，但是有一些不一样
 [OGNL语法指南](https://commons.apache.org/proper/commons-ognl/language-guide.html)
 
 ### More OGNL
+
 `jugg` 使用 `IBeanLoader` 扩展了 `OGNL`，你可以更方便地使用它。
 
 #### 自动加载 Bean
