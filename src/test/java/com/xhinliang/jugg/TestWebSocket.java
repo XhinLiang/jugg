@@ -14,17 +14,18 @@ class TestWebSocket {
     void test() throws Exception {
         startServer();
 
-        for (int i = 1; i < 40; i++) {
-            String username = "xhinliang" + i;
-            new Thread(() -> startClientAndSendEval(username)).start();
-        }
+//        for (int i = 1; i < 40; i++) {
+//            String username = "xhinliang" + i;
+//            new Thread(() -> startClientAndSendEval(username)).start();
+//        }
 
-        WebSocketClient client = new WebSocketClient("ws://localhost:10010/ws", text -> System.out.println("receive: " + text));
+        String evalStr = "abcd";
+        WebSocketClient client = new WebSocketClient("ws://localhost:10010/ws", text -> Assertions.assertEquals("\"+ " + evalStr + " +\"", text));
 
         try {
             client.open();
             client.eval("login xhinliang 1l1l1l");
-            client.eval("@JsonMapperUtils@toJSON(\"abcd\")");
+            client.eval("@JsonMapperUtils@toPrettyJson(\"abcd\")");
         } catch (Exception e) {
             Assertions.fail("", e);
         }
