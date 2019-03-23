@@ -1,11 +1,10 @@
-package com.xhinliang.jugg.handler;
+package com.xhinliang.jugg.plugin.alias;
 
 import javax.annotation.Nullable;
 
-import com.xhinliang.jugg.alias.AliasService;
-import com.xhinliang.jugg.alias.AliasServiceFileImpl;
 import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.exception.JuggRuntimeException;
+import com.xhinliang.jugg.handler.IJuggHandler;
 import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.util.JsonMapperUtils;
 

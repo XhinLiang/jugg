@@ -1,4 +1,4 @@
-package com.xhinliang.jugg.alias;
+package com.xhinliang.jugg.plugin.alias;
 
 import static java.util.Collections.emptyMap;
 

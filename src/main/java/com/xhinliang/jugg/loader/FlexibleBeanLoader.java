@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Configuration;
@@ -15,8 +16,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-
-import com.xhinliang.jugg.util.ClassFinder;
 
 /**
  * IBeanLoader with flexible calling.
@@ -46,6 +45,7 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
     @Nullable
     protected abstract Object getActualBean(String name);
 
+    @PostConstruct
     private void init() {
         ClassFinder.findClasses(s -> {
             String simpleClassName = s.substring(s.lastIndexOf(".") + 1);

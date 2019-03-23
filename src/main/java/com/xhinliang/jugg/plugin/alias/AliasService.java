@@ -1,4 +1,4 @@
-package com.xhinliang.jugg.alias;
+package com.xhinliang.jugg.plugin.alias;
 
 import java.util.Map;
 

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.xhinliang.jugg.handler.IJuggInterceptor;
-import com.xhinliang.jugg.handler.JuggAliasHandler;
+import com.xhinliang.jugg.plugin.alias.JuggAliasHandler;
 import com.xhinliang.jugg.handler.JuggEvalHandler;
 import com.xhinliang.jugg.handler.JuggLoginHandler;
 import com.xhinliang.jugg.loader.FlexibleBeanLoader;

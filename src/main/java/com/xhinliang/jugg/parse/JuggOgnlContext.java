@@ -4,7 +4,7 @@ import java.lang.reflect.Member;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.xhinliang.jugg.alias.AliasServiceFileImpl;
+import com.xhinliang.jugg.plugin.alias.AliasServiceFileImpl;
 import com.xhinliang.jugg.exception.JuggRuntimeException;
 import com.xhinliang.jugg.loader.IBeanLoader;
 
