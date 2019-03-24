@@ -1,8 +1,7 @@
-package com.xhinliang.jugg.util;
+package com.xhinliang.jugg.plugin.insight;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
@@ -14,53 +13,47 @@ import com.google.common.base.Joiner;
 /**
  * @author xhinliang
  */
-public class JuggCallingHelper {
+public class JuggInsightServiceImpl implements JuggInsightService {
 
-    public String m(Object targetObject) {
-        return Joiner.on("\n").join(methods(targetObject));
-    }
-
-    public String f(Object targetObject) {
-        return Joiner.on("\n").join(fields(targetObject));
-    }
-
+    @Override
     public List<String> methods(Object targetObject) {
-        return getMethodDescList(targetObject, false);
+        return getMethodDescList(targetObject);
     }
 
-    public List<String> staticMethods(Object targetObject) {
-        return getMethodDescList(targetObject, true);
-    }
-
+    @Override
     public List<String> fields(Object targetObject) {
-        return getFieldsDescList(targetObject, false);
+        return getFieldsDescList(targetObject);
     }
 
-    public List<String> staticFields(Object targetObject) {
-        return getFieldsDescList(targetObject, true);
-    }
-
-    private List<String> getMethodDescList(Object targetObject, boolean staticMethod) {
+    private List<String> getMethodDescList(Object targetObject) {
         return allMethods(targetObject).stream() //
-                .filter(m -> staticMethod == Modifier.isStatic(m.getModifiers())) //
-                .map(JuggCallingHelper::methodToString) //
+                .map(JuggInsightServiceImpl::methodToString) //
                 .collect(Collectors.toList());
     }
 
-    private List<String> getFieldsDescList(Object targetObject, boolean staticField) {
+    private List<String> getFieldsDescList(Object targetObject) {
         return allFields(targetObject).stream() //
-                .filter(f -> staticField == Modifier.isStatic(f.getModifiers())) //
-                .map(f -> JuggCallingHelper.fieldToString(targetObject, f)) //
+                .map(f -> JuggInsightServiceImpl.fieldToString(targetObject, f)) //
                 .collect(Collectors.toList());
     }
 
     private List<Method> allMethods(Object targetObject) {
-        return Arrays.stream(targetObject.getClass().getDeclaredMethods()) //
+        if (targetObject instanceof Class) {
+            return Arrays.stream(((Class) targetObject).getDeclaredMethods()) //
+                    .collect(Collectors.toList());
+        }
+        return Arrays.stream(targetObject.getClass() //
+                .getDeclaredMethods()) //
                 .collect(Collectors.toList());
     }
 
     private List<Field> allFields(Object targetObject) {
-        return Arrays.stream(targetObject.getClass().getDeclaredFields()) //
+        if (targetObject instanceof Class) {
+            return Arrays.stream(((Class) targetObject).getDeclaredFields()) //
+                    .collect(Collectors.toList());
+        }
+        return Arrays.stream(targetObject.getClass() //
+                .getDeclaredFields()) //
                 .collect(Collectors.toList());
     }
 
@@ -68,7 +61,7 @@ public class JuggCallingHelper {
         String returnType = targetMethod.getReturnType().getSimpleName();
         String methodName = targetMethod.getName();
         Stream<Parameter> parameters = Arrays.stream(targetMethod.getParameters());
-        String innerParameterString = Joiner.on(", ").join(parameters.map(JuggCallingHelper::parameterToString).toArray());
+        String innerParameterString = Joiner.on(", ").join(parameters.map(JuggInsightServiceImpl::parameterToString).toArray());
         String parametersString = "(" + innerParameterString + ")";
         return Joiner.on(" ").join(returnType, methodName, parametersString);
     }

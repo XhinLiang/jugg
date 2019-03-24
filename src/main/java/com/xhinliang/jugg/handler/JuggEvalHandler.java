@@ -1,10 +1,10 @@
 package com.xhinliang.jugg.handler;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.xhinliang.jugg.util.FunctionUtils.getJsonLimited;
 
 import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.parse.IJuggEvalKiller;
-import com.xhinliang.jugg.util.FunctionUtils;
 
 /**
  * @author xhinliang
@@ -19,7 +19,7 @@ public class JuggEvalHandler implements IJuggHandler {
 
     @Override
     public void handle(CommandContext context) {
-        String result = firstNonNull(FunctionUtils.getJsonCatching(() -> evalKiller.eval(context)), "null");
+        String result = firstNonNull(getJsonLimited(evalKiller.eval(context)), "null");
         context.setResult(result);
     }
 }

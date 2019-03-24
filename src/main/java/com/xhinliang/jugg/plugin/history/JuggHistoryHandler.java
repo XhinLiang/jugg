@@ -1,5 +1,8 @@
 package com.xhinliang.jugg.plugin.history;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.xhinliang.jugg.util.FunctionUtils.getJsonLimited;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -8,12 +11,11 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Joiner;
 import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.exception.JuggRuntimeException;
 import com.xhinliang.jugg.handler.IJuggHandler;
 import com.xhinliang.jugg.parse.IJuggEvalKiller;
-import com.xhinliang.jugg.util.FunctionUtils;
 
 /**
  * @author xhinliang <xhinliang@gmail.com>
@@ -26,6 +28,8 @@ public class JuggHistoryHandler implements IJuggHandler {
     private final List<String> lastQueryResult = new CopyOnWriteArrayList<>();
 
     private final IJuggEvalKiller evalKiller;
+
+    private final Joiner lineJoiner = Joiner.on("\n");
 
     public JuggHistoryHandler(IJuggEvalKiller evalKiller) {
         this.evalKiller = evalKiller;
@@ -45,8 +49,7 @@ public class JuggHistoryHandler implements IJuggHandler {
         String historyCommand = getHistoryCommand(command);
         if (historyCommand != null) {
             CommandContext mockContext = new CommandContext(context.getJuggUser(), historyCommand);
-            return "\n" + historyCommand + "\n"
-                    + MoreObjects.firstNonNull(FunctionUtils.getJsonCatching(() -> this.evalKiller.eval(mockContext)), "null");
+            return lineJoiner.join("", historyCommand, firstNonNull(getJsonLimited(evalKiller.eval(mockContext)), "null"));
         } else if (command.startsWith("history ")) {
             String[] spliced = command.split(" ");
             if (spliced.length == 2) {

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.function.Supplier;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -17,16 +16,12 @@ public class FunctionUtils {
 
     private static final int MAX_JSON_LENGTH = 1000000;
 
-    public static String getJsonCatching(Supplier<Object> supplier) {
-        try {
-            String json = JsonMapperUtils.toPrettyJson(supplier.get());
-            if (json != null && json.length() >= MAX_JSON_LENGTH) {
-                json = json.substring(0, MAX_JSON_LENGTH);
-            }
-            return json;
-        } catch (Exception e) {
-            return exceptionToString(e);
+    public static String getJsonLimited(Object object) {
+        String json = JsonMapperUtils.toPrettyJson(object);
+        if (json != null && json.length() >= MAX_JSON_LENGTH) {
+            json = json.substring(0, MAX_JSON_LENGTH);
         }
+        return json;
     }
 
     public static String exceptionToString(Exception e) {
