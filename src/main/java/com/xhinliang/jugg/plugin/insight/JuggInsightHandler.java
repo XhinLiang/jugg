@@ -33,7 +33,7 @@ public class JuggInsightHandler implements IJuggHandler {
         this.predicateFunctionMap = ImmutableMap //
                 .<Predicate<String>, Function<CommandContext, String>> builder() //
                 .put(s -> s.matches("^method (.*)$"), this::methods) //
-                .put(s -> s.matches("^field (.*)$"), this::methods) //
+                .put(s -> s.matches("^field (.*)$"), this::fields) //
                 .build();
     }
 

@@ -1,11 +1,12 @@
 package com.xhinliang.jugg.plugin.insight;
 
+import static java.util.stream.Collectors.toList;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.base.Joiner;
@@ -28,33 +29,33 @@ public class JuggInsightServiceImpl implements JuggInsightService {
     private List<String> getMethodDescList(Object targetObject) {
         return allMethods(targetObject).stream() //
                 .map(JuggInsightServiceImpl::methodToString) //
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private List<String> getFieldsDescList(Object targetObject) {
         return allFields(targetObject).stream() //
                 .map(f -> JuggInsightServiceImpl.fieldToString(targetObject, f)) //
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private List<Method> allMethods(Object targetObject) {
         if (targetObject instanceof Class) {
             return Arrays.stream(((Class) targetObject).getDeclaredMethods()) //
-                    .collect(Collectors.toList());
+                    .collect(toList());
         }
         return Arrays.stream(targetObject.getClass() //
                 .getDeclaredMethods()) //
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private List<Field> allFields(Object targetObject) {
         if (targetObject instanceof Class) {
             return Arrays.stream(((Class) targetObject).getDeclaredFields()) //
-                    .collect(Collectors.toList());
+                    .collect(toList());
         }
         return Arrays.stream(targetObject.getClass() //
                 .getDeclaredFields()) //
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private static String methodToString(Method targetMethod) {
@@ -78,7 +79,7 @@ public class JuggInsightServiceImpl implements JuggInsightService {
         String value;
         field.setAccessible(true);
         try {
-            value = target.getClass().getField(fieldName).get(target) + "";
+            value = field.get(target) + "";
         } catch (Exception e) {
             value = "getFieldError:" + e.getClass().getSimpleName();
         }

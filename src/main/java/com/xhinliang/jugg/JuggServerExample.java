@@ -10,12 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.xhinliang.jugg.handler.IJuggInterceptor;
-import com.xhinliang.jugg.plugin.alias.JuggAliasHandler;
 import com.xhinliang.jugg.handler.JuggEvalHandler;
-import com.xhinliang.jugg.handler.JuggLoginHandler;
 import com.xhinliang.jugg.loader.FlexibleBeanLoader;
 import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.parse.JuggEvalKiller;
+import com.xhinliang.jugg.plugin.alias.JuggAliasHandler;
+import com.xhinliang.jugg.plugin.insight.JuggInsightHandler;
 import com.xhinliang.jugg.websocket.JuggWebSocketServer;
 
 /**
@@ -54,8 +54,8 @@ public final class JuggServerExample {
 
         List<IJuggInterceptor> handlers = Lists.newArrayList(//
                 context -> logger.info("scope start, command: {}", context.getCommand()),
-                new JuggLoginHandler((username, password) -> password.equals("1l1l1l")), //
                 new JuggAliasHandler(beanLoader), //
+                new JuggInsightHandler(evalKiller), //
                 new JuggEvalHandler(evalKiller), //
                 context -> logger.info("scope end"));
 

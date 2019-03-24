@@ -91,7 +91,7 @@ class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSocke
         channelGroup.add(incoming);
         executor.submit(() -> {
             sleepUninterruptibly(20, TimeUnit.MILLISECONDS);
-            incoming.writeAndFlush(new TextWebSocketFrame("[system] welcome, please login."));
+            incoming.writeAndFlush(new TextWebSocketFrame("[system] welcome to jugg."));
         });
     }
 
