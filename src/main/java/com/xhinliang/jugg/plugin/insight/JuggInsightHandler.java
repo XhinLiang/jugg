@@ -63,8 +63,7 @@ public class JuggInsightHandler implements IJuggHandler {
         }
 
         String targetOgnlCommand = m.group(1);
-        CommandContext mockContext = new CommandContext(context.getJuggUser(), targetOgnlCommand);
-        Object target = evalKiller.eval(mockContext);
+        Object target = evalKiller.eval(new CommandContext(context.getJuggUser(), targetOgnlCommand));
         return joiner.join(insightService.methods(target));
     }
 
@@ -80,8 +79,7 @@ public class JuggInsightHandler implements IJuggHandler {
         }
 
         String targetOgnlCommand = m.group(1);
-        CommandContext mockContext = new CommandContext(context.getJuggUser(), targetOgnlCommand);
-        Object target = evalKiller.eval(mockContext);
+        Object target = evalKiller.eval(new CommandContext(context.getJuggUser(), targetOgnlCommand));
         return joiner.join(insightService.fields(target));
     }
 }
