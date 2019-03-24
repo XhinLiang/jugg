@@ -22,6 +22,9 @@ public class JuggInsightHandler implements IJuggHandler {
 
     private final JuggInsightService insightService = new JuggInsightServiceImpl();
 
+    private final Pattern methodPattern = Pattern.compile("^method (.*)$");
+    private final Pattern fieldPattern = Pattern.compile("^field (.*)$");
+
     private final Joiner joiner = Joiner.on("\n");
 
     private final IJuggEvalKiller evalKiller;
@@ -32,8 +35,8 @@ public class JuggInsightHandler implements IJuggHandler {
         this.evalKiller = evalKiller;
         this.predicateFunctionMap = ImmutableMap //
                 .<Predicate<String>, Function<CommandContext, String>> builder() //
-                .put(s -> s.matches("^method (.*)$"), this::methods) //
-                .put(s -> s.matches("^field (.*)$"), this::fields) //
+                .put(s -> methodPattern.matcher(s).find(), this::methods) //
+                .put(s -> fieldPattern.matcher(s).find(), this::fields) //
                 .build();
     }
 
@@ -54,13 +57,7 @@ public class JuggInsightHandler implements IJuggHandler {
     @Nullable
     public String methods(CommandContext context) {
         String command = context.getCommand();
-        String pattern = "^method (.*)$";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(command);
-
-        if (!m.find()) {
-            return null;
-        }
+        Matcher m = methodPattern.matcher(command);
 
         String targetOgnlCommand = m.group(1);
         Object target = evalKiller.eval(new CommandContext(context.getJuggUser(), targetOgnlCommand));
@@ -70,13 +67,7 @@ public class JuggInsightHandler implements IJuggHandler {
     @Nullable
     public String fields(CommandContext context) {
         String command = context.getCommand();
-        String pattern = "^field (.*)$";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(command);
-
-        if (!m.find()) {
-            return null;
-        }
+        Matcher m = fieldPattern.matcher(command);
 
         String targetOgnlCommand = m.group(1);
         Object target = evalKiller.eval(new CommandContext(context.getJuggUser(), targetOgnlCommand));
