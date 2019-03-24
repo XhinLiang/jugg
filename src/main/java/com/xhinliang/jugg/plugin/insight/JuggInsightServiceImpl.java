@@ -1,6 +1,6 @@
 package com.xhinliang.jugg.plugin.insight;
 
-import static java.util.stream.Collectors.toList;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -29,33 +29,33 @@ public class JuggInsightServiceImpl implements JuggInsightService {
     private List<String> getMethodDescList(Object targetObject) {
         return allMethods(targetObject).stream() //
                 .map(JuggInsightServiceImpl::methodToString) //
-                .collect(toList());
+                .collect(toImmutableList());
     }
 
     private List<String> getFieldsDescList(Object targetObject) {
         return allFields(targetObject).stream() //
                 .map(f -> JuggInsightServiceImpl.fieldToString(targetObject, f)) //
-                .collect(toList());
+                .collect(toImmutableList());
     }
 
     private List<Method> allMethods(Object targetObject) {
         if (targetObject instanceof Class) {
             return Arrays.stream(((Class) targetObject).getDeclaredMethods()) //
-                    .collect(toList());
+                    .collect(toImmutableList());
         }
         return Arrays.stream(targetObject.getClass() //
                 .getDeclaredMethods()) //
-                .collect(toList());
+                .collect(toImmutableList());
     }
 
     private List<Field> allFields(Object targetObject) {
         if (targetObject instanceof Class) {
             return Arrays.stream(((Class) targetObject).getDeclaredFields()) //
-                    .collect(toList());
+                    .collect(toImmutableList());
         }
         return Arrays.stream(targetObject.getClass() //
                 .getDeclaredFields()) //
-                .collect(toList());
+                .collect(toImmutableList());
     }
 
     private static String methodToString(Method targetMethod) {

@@ -1,9 +1,10 @@
 package com.xhinliang.jugg.loader;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -55,7 +56,7 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
         Configuration configuration = new ConfigurationBuilder() //
                 .setUrls(Stream.of(ClasspathHelper.forPackage("com"), ClasspathHelper.forPackage("org"), ClasspathHelper.forPackage("net")) //
                         .flatMap(Collection::stream) //
-                        .collect(Collectors.toSet())) //
+                        .collect(toSet())) //
                 .setScanners(new SubTypesScanner(false));
         Reflections reflections = new Reflections(configuration);
         reflections.getAllTypes().forEach(s -> {

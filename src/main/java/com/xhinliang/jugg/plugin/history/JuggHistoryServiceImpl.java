@@ -1,6 +1,6 @@
 package com.xhinliang.jugg.plugin.history;
 
-import static java.util.stream.Collectors.toList;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.dizitart.no2.filters.Filters.text;
 
 import java.nio.file.Path;
@@ -61,7 +61,7 @@ public class JuggHistoryServiceImpl implements JuggHistoryService {
                     .map(d -> (String) d.get("command")) //
                     .distinct() //
                     .limit(RESULT_LIMIT) //
-                    .collect(toList());
+                    .collect(toImmutableList());
         }
         return getCollection(username) //
                 .find(options) //
@@ -69,7 +69,7 @@ public class JuggHistoryServiceImpl implements JuggHistoryService {
                 .map(d -> (String) d.get("command")) //
                 .distinct() //
                 .limit(RESULT_LIMIT) //
-                .collect(toList());
+                .collect(toImmutableList());
     }
 
     private NitriteCollection getCollection(String username) {

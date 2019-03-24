@@ -5,7 +5,8 @@ import static com.xhinliang.jugg.util.FunctionUtils.getJsonLimited;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +26,7 @@ public class JuggHistoryHandler implements IJuggHandler {
 
     private final JuggHistoryService historyService = JuggHistoryServiceImpl.getInstance();
 
-    private final List<String> lastQueryResult = new CopyOnWriteArrayList<>();
+    private final Queue<String> lastQueryResult = new ConcurrentLinkedQueue<>();
 
     private final IJuggEvalKiller evalKiller;
 
@@ -50,14 +51,18 @@ public class JuggHistoryHandler implements IJuggHandler {
         if (historyCommand != null) {
             CommandContext mockContext = new CommandContext(context.getJuggUser(), historyCommand);
             return lineJoiner.join("", historyCommand, firstNonNull(getJsonLimited(evalKiller.eval(mockContext)), "null"));
-        } else if (command.startsWith("history ")) {
+        }
+
+        if (command.startsWith("history ")) {
             String[] spliced = command.split(" ");
             if (spliced.length == 2) {
                 return handleSearchHistory(context.getJuggUser().getUserName(), spliced);
             } else {
                 throw new JuggRuntimeException("[system] history syntax error!");
             }
-        } else if (command.equals("history")) {
+        }
+
+        if (command.equals("history")) {
             return handleAllHistory(context.getJuggUser().getUserName());
         } else {
             historyService.addHistory(context.getJuggUser().getUserName(), command);
@@ -95,8 +100,8 @@ public class JuggHistoryHandler implements IJuggHandler {
         lastQueryResult.clear();
         lastQueryResult.addAll(tempLastQueryResult);
         StringBuilder sb = new StringBuilder("list of your history commands, use !{{index}} to call it again.\n");
-        for (int i = 0; i < lastQueryResult.size(); ++i) {
-            sb.append(i).append(") ").append(lastQueryResult.get(i));
+        for (int i = 0; i < tempLastQueryResult.size(); ++i) {
+            sb.append(i).append(") ").append(tempLastQueryResult.get(i));
             if (i != lastQueryResult.size() - 1) {
                 sb.append("\n");
             }
