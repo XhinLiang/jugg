@@ -4,6 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +42,7 @@ public class JuggInsightServiceImpl implements JuggInsightService {
     private List<Method> allMethods(Object targetObject) {
         if (targetObject instanceof Class) {
             return Arrays.stream(((Class) targetObject).getDeclaredMethods()) //
+                    .filter(m -> Modifier.isStatic(m.getModifiers()))
                     .collect(toImmutableList());
         }
         return Arrays.stream(targetObject.getClass() //
@@ -51,6 +53,7 @@ public class JuggInsightServiceImpl implements JuggInsightService {
     private List<Field> allFields(Object targetObject) {
         if (targetObject instanceof Class) {
             return Arrays.stream(((Class) targetObject).getDeclaredFields()) //
+                    .filter(m -> Modifier.isStatic(m.getModifiers()))
                     .collect(toImmutableList());
         }
         return Arrays.stream(targetObject.getClass() //
