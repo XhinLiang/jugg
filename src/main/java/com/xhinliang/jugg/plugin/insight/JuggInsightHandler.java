@@ -20,8 +20,6 @@ import com.xhinliang.jugg.parse.IJuggEvalKiller;
  */
 public class JuggInsightHandler implements IJuggHandler {
 
-    private final JuggInsightService insightService = new JuggInsightServiceImpl();
-
     private final Pattern methodPattern = Pattern.compile("^method (.*)$");
     private final Pattern fieldPattern = Pattern.compile("^field (.*)$");
 
@@ -29,10 +27,17 @@ public class JuggInsightHandler implements IJuggHandler {
 
     private final IJuggEvalKiller evalKiller;
 
+    private final JuggInsightService insightService;
+
     private final Map<Predicate<String>, Function<CommandContext, String>> predicateFunctionMap;
 
     public JuggInsightHandler(IJuggEvalKiller evalKiller) {
+        this(null, evalKiller);
+    }
+
+    public JuggInsightHandler(@Nullable Function<String, String> fqcnFun, IJuggEvalKiller evalKiller) {
         this.evalKiller = evalKiller;
+        this.insightService = new JuggInsightServiceImpl(fqcnFun);
         this.predicateFunctionMap = ImmutableMap //
                 .<Predicate<String>, Function<CommandContext, String>> builder() //
                 .put(s -> methodPattern.matcher(s).find(), this::methods) //

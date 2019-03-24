@@ -30,14 +30,14 @@ import org.reflections.util.ConfigurationBuilder;
  */
 public abstract class FlexibleBeanLoader implements IBeanLoader {
 
-    private Map<String, String> clazzMap;
+    private Map<String, String> simpleClassNameMap;
 
     public FlexibleBeanLoader() {
         this(new HashMap<>());
     }
 
-    public FlexibleBeanLoader(Map<String, String> clazzMap) {
-        this.clazzMap = clazzMap;
+    public FlexibleBeanLoader(Map<String, String> simpleClassNameMap) {
+        this.simpleClassNameMap = simpleClassNameMap;
         init();
     }
 
@@ -50,7 +50,7 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
     private void init() {
         ClassFinder.findClasses(s -> {
             String simpleClassName = s.substring(s.lastIndexOf(".") + 1);
-            clazzMap.putIfAbsent(simpleClassName, s);
+            simpleClassNameMap.putIfAbsent(simpleClassName, s);
             return true;
         });
         Configuration configuration = new ConfigurationBuilder() //
@@ -61,7 +61,7 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
         Reflections reflections = new Reflections(configuration);
         reflections.getAllTypes().forEach(s -> {
             String simpleClassName = s.substring(s.lastIndexOf(".") + 1);
-            clazzMap.putIfAbsent(simpleClassName, s);
+            simpleClassNameMap.putIfAbsent(simpleClassName, s);
         });
     }
 
@@ -76,7 +76,7 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
         }
         if (bean == null) {
             String classSimpleName = name.substring(0, 1).toUpperCase() + name.substring(1);
-            String className = clazzMap.get(classSimpleName);
+            String className = simpleClassNameMap.get(classSimpleName);
             if (StringUtils.isNotBlank(className)) {
                 try {
                     Class<?> clazz = getClassByName(className);
@@ -95,8 +95,13 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
         try {
             return Class.forName(name);
         } catch (ClassNotFoundException classNotFound) {
-            String retryClassName = clazzMap.getOrDefault(name, name);
+            String retryClassName = simpleClassNameMap.getOrDefault(name, name);
             return Class.forName(retryClassName);
         }
+    }
+
+    @Nullable
+    public String getFqcnBySimpleClassName(String simpleClassName) {
+        return simpleClassNameMap.get(simpleClassName);
     }
 }

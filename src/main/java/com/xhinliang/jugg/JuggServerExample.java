@@ -32,7 +32,7 @@ public final class JuggServerExample {
     }
 
     private void startServer() throws InterruptedException {
-        IBeanLoader beanLoader = new FlexibleBeanLoader() {
+        FlexibleBeanLoader beanLoader = new FlexibleBeanLoader() {
 
             @Nullable
             @Override
@@ -53,9 +53,8 @@ public final class JuggServerExample {
         JuggEvalKiller evalKiller = new JuggEvalKiller(beanLoader);
 
         List<IJuggInterceptor> handlers = Lists.newArrayList(//
-                context -> logger.info("scope start, command: {}", context.getCommand()),
-                new JuggAliasHandler(beanLoader), //
-                new JuggInsightHandler(evalKiller), //
+                context -> logger.info("scope start, command: {}", context.getCommand()), new JuggAliasHandler(beanLoader), //
+                new JuggInsightHandler(beanLoader::getFqcnBySimpleClassName, evalKiller), //
                 new JuggEvalHandler(evalKiller), //
                 context -> logger.info("scope end"));
 

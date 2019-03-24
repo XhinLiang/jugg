@@ -11,7 +11,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.base.Joiner;
 
@@ -27,6 +31,12 @@ public class JuggInsightServiceImpl implements JuggInsightService {
             .filter(m -> m.getName().startsWith("is")) //
             .sorted(Comparator.comparing(Method::getName)) //
             .collect(toImmutableList());
+
+    private final Function<String, String> fqcnFun;
+
+    public JuggInsightServiceImpl(@Nullable Function<String, String> fqcnFun) {
+        this.fqcnFun = fqcnFun;
+    }
 
     @Override
     public List<String> methods(Object targetObject) {
@@ -74,7 +84,7 @@ public class JuggInsightServiceImpl implements JuggInsightService {
 
     private String methodToString(Method targetMethod) {
         String modString = getModifierString(targetMethod.getModifiers());
-        String returnType = targetMethod.getReturnType().getSimpleName();
+        String returnType = getViewClassName(targetMethod.getReturnType());
         String methodName = targetMethod.getName();
         Stream<Parameter> parameters = Arrays.stream(targetMethod.getParameters());
         String innerParameterString = commaJoiner.join(parameters.map(this::parameterToString).toArray());
@@ -83,14 +93,14 @@ public class JuggInsightServiceImpl implements JuggInsightService {
     }
 
     private String parameterToString(Parameter parameter) {
-        String parameterType = parameter.getType().getSimpleName();
+        String parameterType = getViewClassName(parameter.getType());
         String name = parameter.getName();
         return spaceJoiner.join(parameterType, name);
     }
 
     private String fieldToString(Object target, Field field) {
         String modString = getModifierString(field.getModifiers());
-        String fieldType = field.getType().getSimpleName();
+        String fieldType = getViewClassName(field.getType());
         String fieldName = field.getName();
         String value;
         field.setAccessible(true);
@@ -100,6 +110,32 @@ public class JuggInsightServiceImpl implements JuggInsightService {
             value = "getFieldError:" + e.getClass().getSimpleName();
         }
         return spaceJoiner.join(modString, fieldType, fieldName, value);
+    }
+
+    @Nonnull
+    private String getViewClassName(Class<?> clazz) {
+        String simpleName = clazz.getSimpleName();
+        String fqcn = clazz.getName();
+
+        if (fqcnFun == null) {
+            return simpleName;
+        }
+
+        if (fqcn.startsWith("java")) {
+            return simpleName;
+        }
+
+        String mapperFqcn = fqcnFun.apply(clazz.getSimpleName());
+
+        if (mapperFqcn == null) {
+            return fqcn;
+        }
+
+        if (Objects.equals(mapperFqcn, fqcn)) {
+            return simpleName;
+        }
+
+        return fqcn;
     }
 
     private String getModifierString(int mod) {
