@@ -79,10 +79,14 @@ class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSocke
                 context.setShouldEnd(true);
             }
         }
-        if (StringUtils.isBlank(context.getResult())) {
-            context.setResult("handler not found, check you config");
+        String result = context.getResult();
+        if (result == null) {
+            result = ("handler not found, check you config");
         }
-        return new TextWebSocketFrame(context.getResult());
+        if (result.equals("")) {
+            result = "(empty result)\n";
+        }
+        return new TextWebSocketFrame(result);
     }
 
     @Override
