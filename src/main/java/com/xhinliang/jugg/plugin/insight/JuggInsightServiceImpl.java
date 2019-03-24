@@ -74,7 +74,7 @@ public class JuggInsightServiceImpl implements JuggInsightService {
     }
 
     private static String fieldToString(Object target, Field field) {
-        String fieldType = field.getType().getTypeName();
+        String fieldType = field.getType().getSimpleName();
         String fieldName = field.getName();
         String value;
         field.setAccessible(true);
