@@ -31,7 +31,7 @@ public final class JsonMapperUtils {
         try {
             return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            return String.format("[%s] -> [%s]", obj.getClass().getName(), obj.toString());
         }
     }
 }
