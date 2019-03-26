@@ -70,7 +70,9 @@ public class JuggInsightHandler implements IJuggHandler {
 
         String targetOgnlCommand = m.group(1);
         Object target = evalKiller.eval(new CommandContext(context.getJuggUser(), targetOgnlCommand));
-        return joiner.join(insightService.methods(target));
+        String firstLine = String.format("methods of %s",
+                target instanceof Class ? ((Class) target).getName() : target.getClass().getName());
+        return firstLine + joiner.join(insightService.methods(target));
     }
 
     @Nullable
@@ -84,6 +86,8 @@ public class JuggInsightHandler implements IJuggHandler {
 
         String targetOgnlCommand = m.group(1);
         Object target = evalKiller.eval(new CommandContext(context.getJuggUser(), targetOgnlCommand));
-        return joiner.join(insightService.fields(target));
+        String firstLine = String.format("fields of %s\n",
+                target instanceof Class ? ((Class) target).getName() : target.getClass().getName());
+        return firstLine + joiner.join(insightService.fields(target));
     }
 }
