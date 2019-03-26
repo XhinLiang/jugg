@@ -70,7 +70,7 @@ public class JuggInsightHandler implements IJuggHandler {
 
         String targetOgnlCommand = m.group(1);
         Object target = evalKiller.eval(new CommandContext(context.getJuggUser(), targetOgnlCommand));
-        String firstLine = String.format("methods of %s",
+        String firstLine = String.format("methods of %s\n",
                 target instanceof Class ? ((Class) target).getName() : target.getClass().getName());
         return firstLine + joiner.join(insightService.methods(target));
     }
