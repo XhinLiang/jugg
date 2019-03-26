@@ -1,12 +1,13 @@
 package com.xhinliang.jugg.parse;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Member;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.xhinliang.jugg.plugin.alias.AliasServiceFileImpl;
 import com.xhinliang.jugg.exception.JuggRuntimeException;
 import com.xhinliang.jugg.loader.IBeanLoader;
+import com.xhinliang.jugg.plugin.alias.AliasServiceFileImpl;
 
 import ognl.DefaultTypeConverter;
 import ognl.MemberAccess;
@@ -35,6 +36,10 @@ public class JuggOgnlContext extends OgnlContext {
 
         @Override
         public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+            // access private method/field
+            if (member instanceof AccessibleObject) {
+                ((AccessibleObject) member).setAccessible(true);
+            }
             return true;
         }
     };
