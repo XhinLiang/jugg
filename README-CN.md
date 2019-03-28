@@ -11,7 +11,7 @@
 <dependency>
     <groupId>com.xhinliang</groupId>
     <artifactId>jugg</artifactId>
-    <version>2.0.6</version>
+    <version>2.0.7</version>
     <exclusions>
         <exclusion>
             <groupId>org.slf4j</groupId>
