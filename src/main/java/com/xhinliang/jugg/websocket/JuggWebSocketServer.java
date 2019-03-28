@@ -53,7 +53,7 @@ public class JuggWebSocketServer {
                     .childHandler(new WebSocketServerInitializer(handlers, fileLoader)) //
                     .option(ChannelOption.SO_BACKLOG, OPTION_SO_BACKLOG) //
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
-            logger.info("WebSocket Server started: {}", port);
+            logger.info("WebSocket Server started: http://localhost:{}", port);
             ChannelFuture f = b.bind(port).sync();
             f.channel().closeFuture().sync();
         } finally {

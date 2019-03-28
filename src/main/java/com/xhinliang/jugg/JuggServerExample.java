@@ -15,6 +15,8 @@ import com.xhinliang.jugg.loader.FlexibleBeanLoader;
 import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.parse.JuggEvalKiller;
 import com.xhinliang.jugg.plugin.alias.JuggAliasHandler;
+import com.xhinliang.jugg.plugin.help.JuggHelpHandler;
+import com.xhinliang.jugg.plugin.history.JuggHistoryHandler;
 import com.xhinliang.jugg.plugin.insight.JuggInsightHandler;
 import com.xhinliang.jugg.websocket.JuggWebSocketServer;
 
@@ -55,8 +57,11 @@ public final class JuggServerExample {
         List<IJuggInterceptor> handlers = Lists.newArrayList(//
                 context -> logger.info("scope start, command: {}", context.getCommand()), new JuggAliasHandler(beanLoader), //
                 new JuggInsightHandler(beanLoader::getFqcnBySimpleClassName, evalKiller), //
+                new JuggHistoryHandler(evalKiller), //
                 new JuggEvalHandler(evalKiller), //
                 context -> logger.info("scope end"));
+
+        handlers.add(0, new JuggHelpHandler(handlers));
 
         JuggWebSocketServer webSocketServer = new JuggWebSocketServer(DEFAULT_PORT, handlers);
         webSocketServer.start();

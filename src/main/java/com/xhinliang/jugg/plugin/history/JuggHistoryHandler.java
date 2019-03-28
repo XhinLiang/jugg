@@ -5,6 +5,7 @@ import static com.xhinliang.jugg.util.FunctionUtils.getJsonLimited;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
@@ -13,16 +14,18 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.exception.JuggRuntimeException;
 import com.xhinliang.jugg.handler.IJuggHandler;
 import com.xhinliang.jugg.parse.IJuggEvalKiller;
+import com.xhinliang.jugg.plugin.help.JuggHelpable;
 
 /**
  * @author xhinliang <xhinliang@gmail.com>
  * Created on 2019-03-21
  */
-public class JuggHistoryHandler implements IJuggHandler {
+public class JuggHistoryHandler implements IJuggHandler, JuggHelpable {
 
     private final JuggHistoryService historyService = JuggHistoryServiceImpl.getInstance();
 
@@ -107,5 +110,19 @@ public class JuggHistoryHandler implements IJuggHandler {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public String name() {
+        return "history";
+    }
+
+    @Override
+    public Map<String, String> patternToMessage() {
+        return ImmutableMap.<String, String> builder() //
+                .put("history", "list all histories.") //
+                .put("history {{search}}", "search histories") //
+                .build();
+
     }
 }

@@ -54,16 +54,5 @@ rl.on("line", input => {
         return;
     }
 
-    if (input == "help") {
-        oChild.log('[client] jugg is a Java REPL, you can eval your Java Code but don\'t be EVIL!');
-        oChild.log(" ");
-        oChild.log("connect youWsUrl                         ==== connect another WebSocketServer");
-        oChild.log("login username password                  ==== login with your userName and password");
-        oChild.log("bean.method()                            ==== call bean method without param");
-        oChild.log("bean.m(xxx)                              ==== call bean method with param xxx (auto detect type)");
-        oChild.log("bean.m(123L)                             ==== call bean method with param 123 (long type)");
-        rl.prompt();
-        return;
-    }
     ws.send(input);
 });

@@ -19,8 +19,8 @@ public class TestHistoryService {
         service.addHistory("xhinliang", "abcd.eval2()");
 
         List<String> history = service.query("xhinliang", "eva");
-        Assertions.assertTrue(history.get(0).equals("abcd.eval2()"));
-        Assertions.assertTrue(history.get(1).equals("abcd.eval()"));
+        Assertions.assertEquals("abcd.eval2()", history.get(0));
+        Assertions.assertEquals("abcd.eval()", history.get(1));
         history.forEach(h -> Assertions.assertTrue(h.contains("eva")));
 
         List<String> allHistory = service.query("xhinliang", null);
