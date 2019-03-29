@@ -60,7 +60,7 @@ public class JuggHelpHandler implements IJuggHandler, JuggHelpable {
 
     @SuppressWarnings("unused")
     private String handleAllHelp(CommandContext context) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("help\n");
         helpableMap.forEach((name, helpable) -> {
             sb.append(name).append("\n");
             helpable.patternToMessage()
