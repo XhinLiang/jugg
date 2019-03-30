@@ -1,17 +1,21 @@
 package com.xhinliang.jugg.plugin.alias;
 
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableMap;
 import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.exception.JuggRuntimeException;
 import com.xhinliang.jugg.handler.IJuggHandler;
 import com.xhinliang.jugg.loader.IBeanLoader;
+import com.xhinliang.jugg.plugin.help.JuggHelpable;
 import com.xhinliang.jugg.util.JsonMapperUtils;
 
 /**
  * @author xhinliang
  */
-public class JuggAliasHandler implements IJuggHandler {
+public class JuggAliasHandler implements IJuggHandler, JuggHelpable {
 
     private IBeanLoader beanLoader;
 
@@ -74,4 +78,16 @@ public class JuggAliasHandler implements IJuggHandler {
         throw new JuggRuntimeException("[system] alias syntax error, command [" + targetOrMethod + "] not allow!");
     }
 
+    @Override
+    public String name() {
+        return "alias";
+    }
+
+    @Override
+    public Map<String, String> patternToMessage() {
+        return ImmutableMap.<String, String> builder() //
+                .put("alias target", "list all current alias.") //
+                .put("alias target {{aliaName}} {{realName}}", "list help messages of this handler") //
+                .build();
+    }
 }

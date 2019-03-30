@@ -105,7 +105,7 @@ public final class JuggServerExample {
             return val;
         }
 
-        public String ping(String val) {
+        public <T> T ping(T val) {
             return val;
         }
 
