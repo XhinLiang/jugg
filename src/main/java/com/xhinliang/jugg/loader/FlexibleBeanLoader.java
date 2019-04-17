@@ -1,10 +1,14 @@
 package com.xhinliang.jugg.loader;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -48,21 +52,37 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
 
     @PostConstruct
     private void init() {
-        ClassFinder.findClasses(s -> {
-            String simpleClassName = s.substring(s.lastIndexOf(".") + 1);
-            simpleClassNameMap.putIfAbsent(simpleClassName, s);
+        Set<String> fqcnSet = new HashSet<>();
+        ClassFinder.findClasses(fqcn -> {
+            fqcnSet.add(fqcn);
             return true;
         });
+
         Configuration configuration = new ConfigurationBuilder() //
                 .setUrls(Stream.of(ClasspathHelper.forPackage("com"), ClasspathHelper.forPackage("org"), ClasspathHelper.forPackage("net")) //
                         .flatMap(Collection::stream) //
                         .collect(toSet())) //
                 .setScanners(new SubTypesScanner(false));
         Reflections reflections = new Reflections(configuration);
-        reflections.getAllTypes().forEach(s -> {
-            String simpleClassName = s.substring(s.lastIndexOf(".") + 1);
-            simpleClassNameMap.putIfAbsent(simpleClassName, s);
-        });
+
+        Stream<String> anotherFqcnStream = reflections.getAllTypes().stream();
+
+        Map<String, String> tempMap = Stream.concat(fqcnSet.stream(), anotherFqcnStream)
+                .collect(toMap(this::getSimpleName, identity(), (fqcnA, fqcnB) -> {
+                    if (fqcnA.startsWith("java.")) {
+                        return fqcnA;
+                    }
+                    if (fqcnA.startsWith("javax.")) {
+                        return fqcnA;
+                    }
+                    return fqcnB;
+                }));
+        tempMap.putAll(simpleClassNameMap);
+        simpleClassNameMap = tempMap;
+    }
+
+    private String getSimpleName(String fqcn) {
+        return fqcn.substring(fqcn.lastIndexOf(".") + 1);
     }
 
     @Nullable
