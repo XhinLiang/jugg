@@ -27,8 +27,14 @@ public class TestEvalKiller {
     @Test
     void testMvel() {
         IJuggEvalKiller testCommandParser = mvelEvalKiller();
-        CommandContext guestContext = new CommandContext(new JuggUser(), "testBean.value;");
+        CommandContext guestContext = new CommandContext(new JuggUser(), "foreach (x : 9) { System.out.print(x); }");
         Object o = testCommandParser.eval(guestContext);
+        System.out.println(o);
+        o = testCommandParser.eval(new CommandContext(new JuggUser(), "s = 'abc'"));
+        System.out.println(o);
+        o = testCommandParser.eval(new CommandContext(new JuggUser(), "s"));
+        System.out.println(o);
+        o = testCommandParser.eval(new CommandContext(new JuggUser(), "testBean.value"));
         System.out.println(o);
     }
 

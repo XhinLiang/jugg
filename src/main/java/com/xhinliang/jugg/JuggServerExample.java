@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,6 @@ import com.google.common.collect.Lists;
 import com.xhinliang.jugg.handler.IJuggInterceptor;
 import com.xhinliang.jugg.handler.JuggEvalHandler;
 import com.xhinliang.jugg.loader.FlexibleBeanLoader;
-import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.parse.ognl.JuggOgnlEvalKiller;
 import com.xhinliang.jugg.plugin.alias.JuggAliasHandler;
 import com.xhinliang.jugg.plugin.help.JuggHelpHandler;
@@ -70,21 +70,21 @@ public final class JuggServerExample {
     /**
      * just for mock
      */
-    static class MockBeanLoader implements IBeanLoader {
+    static class MockBeanLoader extends FlexibleBeanLoader {
 
-        @Override
-        public Object getBeanByName(String name) {
-            return new TestBean();
-        }
-
-        @Nonnull
-        @Override
-        public Class<?> getClassByName(String name) {
-            return TestBean.class;
-        }
+        private TestBean testBean = new TestBean();
 
         @Override
         public Object getBeanByClass(@Nonnull Class<?> clazz) {
+            return clazz == TestBean.class ? testBean : null;
+        }
+
+        @Nullable
+        @Override
+        protected Object getActualBean(String name) {
+            if (StringUtils.equals("testBean", name)) {
+                return testBean;
+            }
             return null;
         }
     }

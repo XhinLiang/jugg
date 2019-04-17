@@ -1,5 +1,7 @@
 package com.xhinliang.jugg.parse.mvel;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -9,7 +11,6 @@ import org.mvel2.MVEL;
 import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.parse.IJuggEvalKiller;
-import com.xhinliang.jugg.parse.ognl.JuggOgnlContext;
 
 /**
  * @author xhinliang <xhinliang@gmail.com>
@@ -17,16 +18,19 @@ import com.xhinliang.jugg.parse.ognl.JuggOgnlContext;
  */
 public class JuggMvelEvalKiller implements IJuggEvalKiller {
 
-    private Function<String, JuggOgnlContext> localContextSupplier;
+    private JuggMvelContext globalContext;
+
+    private Function<String, HashMap<String, Object>> localContextSupplier;
 
     public JuggMvelEvalKiller(IBeanLoader beanLoader) {
-        this.localContextSupplier = new Function<String, JuggOgnlContext>() {
+        this.globalContext = new JuggMvelContext(beanLoader);
+        this.localContextSupplier = new Function<String, HashMap<String, Object>>() {
 
-            private ConcurrentMap<String, JuggOgnlContext> contextMap = new ConcurrentHashMap<>();
+            private ConcurrentMap<String, HashMap<String, Object>> contextMap = new ConcurrentHashMap<>();
 
             @Override
-            public JuggOgnlContext apply(String commandContext) {
-                return contextMap.computeIfAbsent(commandContext, (key) -> new JuggOgnlContext(beanLoader));
+            public HashMap<String, Object> apply(String commandContext) {
+                return contextMap.computeIfAbsent(commandContext, (key) -> new HashMap<>());
             }
         };
     }
@@ -34,6 +38,7 @@ public class JuggMvelEvalKiller implements IJuggEvalKiller {
     @Override
     public Object eval(CommandContext commandContext) {
         String command = commandContext.getCommand();
-        return MVEL.eval(command, localContextSupplier.apply(commandContext.getJuggUser().getUserName()));
+        Map map = localContextSupplier.apply(commandContext.getJuggUser().getUserName());
+        return MVEL.eval(command, map, globalContext);
     }
 }
