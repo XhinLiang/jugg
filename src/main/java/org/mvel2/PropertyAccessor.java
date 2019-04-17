@@ -611,6 +611,7 @@ public class PropertyAccessor {
                 }
             } else if (member != null) {
                 currType = toNonPrimitiveType(((Field) member).getType());
+                ((Field) member).setAccessible(true);
                 return ((Field) member).get(ctx);
             } else if (ctx instanceof Map && (((Map) ctx).containsKey(property) || nullHandle)) {
                 if (ctx instanceof Proto.ProtoInstance) {
@@ -625,6 +626,7 @@ public class PropertyAccessor {
                     if (property.equals(m.getName())) {
                         if (pCtx != null && pCtx.getParserConfiguration() != null ? pCtx.getParserConfiguration()
                                 .isAllowNakedMethCall() : MVEL.COMPILER_OPT_ALLOW_NAKED_METH_CALL) {
+                            m.setAccessible(true);
                             return m.invoke(ctx, EMPTY_OBJ_ARR);
                         }
                         return m;
@@ -648,6 +650,7 @@ public class PropertyAccessor {
         if (tryStatic != null) {
             if (tryStatic instanceof Class || tryStatic instanceof Method) return tryStatic;
             else {
+                ((Field) tryStatic).setAccessible(true);
                 return ((Field) tryStatic).get(null);
             }
         } else if (pCtx != null && pCtx.getParserConfiguration() != null ? pCtx.getParserConfiguration()

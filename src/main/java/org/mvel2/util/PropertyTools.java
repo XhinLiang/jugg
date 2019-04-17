@@ -118,10 +118,18 @@ public class PropertyTools {
     }
 
     public static Member getFieldOrAccessor(Class clazz, String property) {
-        for (Field f : clazz.getFields()) {
+        Field[] fields = clazz.getFields();
+        for (Field f : fields) {
+            f.setAccessible(true);
             if (property.equals(f.getName())) {
-                if ((f.getModifiers() & PUBLIC) != 0) return f;
-                break;
+                return f;
+            }
+        }
+        fields = clazz.getDeclaredFields();
+        for (Field f : fields) {
+            f.setAccessible(true);
+            if (property.equals(f.getName())) {
+                return f;
             }
         }
         return getGetter(clazz, property);

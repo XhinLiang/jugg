@@ -93,9 +93,9 @@ public final class JuggServerExample {
      * for test
      */
     @SuppressWarnings({ "unused", "WeakerAccess" })
-    public static class TestBean {
+    private static class TestBean {
 
-        private String value = "";
+        private String value = "xxx";
 
         private String getVal() {
             return value;

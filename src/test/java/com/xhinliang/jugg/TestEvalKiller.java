@@ -27,7 +27,7 @@ public class TestEvalKiller {
     @Test
     void testMvel() {
         IJuggEvalKiller testCommandParser = mvelEvalKiller();
-        CommandContext guestContext = new CommandContext(new JuggUser(), "testBean.ping(123);");
+        CommandContext guestContext = new CommandContext(new JuggUser(), "testBean.value;");
         Object o = testCommandParser.eval(guestContext);
         System.out.println(o);
     }
