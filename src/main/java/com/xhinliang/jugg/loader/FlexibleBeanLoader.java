@@ -4,9 +4,11 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -28,7 +30,11 @@ import org.reflections.util.ConfigurationBuilder;
  * FlexibleBeanLoader can auto find Java Class and register it.
  * In most case, you can replace FQCN with SimpleClassName.
  *
- * for example, you can call `@Maps@newHashMap()` instead of `@com.google.common.collect.Maps@newHashMap()`
+ * for example
+ *
+ * In OgnlEvalKiller, you can call `@Maps@newHashMap()` instead of `@com.google.common.collect.Maps@newHashMap()`
+ *
+ * In MvelEvalKiller, you can call `Maps.newHashMap()` instead of `com.google.common.collect.Maps.newHashMap()`
  *
  * @author xhinliang
  */
@@ -36,12 +42,23 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
 
     private Map<String, String> simpleClassNameMap;
 
+    private List<String> preferClassPrefix;
+
     public FlexibleBeanLoader() {
         this(new HashMap<>());
     }
 
-    public FlexibleBeanLoader(Map<String, String> simpleClassNameMap) {
+    public FlexibleBeanLoader(List<String> preferClassPrefix) {
+        this(new HashMap<>(), preferClassPrefix);
+    }
+
+    public FlexibleBeanLoader(Map<String, String> simpleClassName2FqcnMap) {
+        this(simpleClassName2FqcnMap, new ArrayList<>());
+    }
+
+    public FlexibleBeanLoader(Map<String, String> simpleClassNameMap, List<String> preferClassPrefix) {
         this.simpleClassNameMap = simpleClassNameMap;
+        this.preferClassPrefix = preferClassPrefix;
         init();
     }
 
@@ -69,13 +86,9 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
 
         Map<String, String> tempMap = Stream.concat(fqcnSet.stream(), anotherFqcnStream)
                 .collect(toMap(this::getSimpleName, identity(), (fqcnA, fqcnB) -> {
-                    if (fqcnA.startsWith("java.")) {
-                        return fqcnA;
-                    }
-                    if (fqcnA.startsWith("javax.")) {
-                        return fqcnA;
-                    }
-                    return fqcnB;
+                    boolean preferB = preferClassPrefix.stream() //
+                            .anyMatch(fqcnB::startsWith);
+                    return preferB ? fqcnB : fqcnA;
                 }));
         tempMap.putAll(simpleClassNameMap);
         simpleClassNameMap = tempMap;
