@@ -36,6 +36,8 @@ public class TestEvalKiller {
         System.out.println(o);
         o = testCommandParser.eval(new CommandContext(new JuggUser(), "testBean.value"));
         System.out.println(o);
+        o = testCommandParser.eval(new CommandContext(new JuggUser(), "def addTwo(a, b){ a + b; }"));
+        System.out.println(o);
     }
 
     private IJuggEvalKiller genEvalKiller() {

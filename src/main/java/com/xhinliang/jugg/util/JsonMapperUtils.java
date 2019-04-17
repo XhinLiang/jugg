@@ -4,6 +4,8 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 
 import javax.annotation.Nullable;
 
+import org.mvel2.ast.FunctionInstance;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
@@ -27,6 +29,9 @@ public final class JsonMapperUtils {
     public static String toPrettyJson(@Nullable Object obj) {
         if (obj == null) {
             return "null";
+        }
+        if (obj instanceof FunctionInstance) {
+            return "function: " + ((FunctionInstance) obj).getFunction().toString();
         }
         try {
             return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
