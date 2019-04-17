@@ -13,7 +13,7 @@ import com.xhinliang.jugg.handler.IJuggInterceptor;
 import com.xhinliang.jugg.handler.JuggEvalHandler;
 import com.xhinliang.jugg.loader.FlexibleBeanLoader;
 import com.xhinliang.jugg.loader.IBeanLoader;
-import com.xhinliang.jugg.parse.JuggEvalKiller;
+import com.xhinliang.jugg.parse.ognl.JuggOgnlEvalKiller;
 import com.xhinliang.jugg.plugin.alias.JuggAliasHandler;
 import com.xhinliang.jugg.plugin.help.JuggHelpHandler;
 import com.xhinliang.jugg.plugin.history.JuggHistoryHandler;
@@ -52,7 +52,7 @@ public final class JuggServerExample {
             }
         };
 
-        JuggEvalKiller evalKiller = new JuggEvalKiller(beanLoader);
+        JuggOgnlEvalKiller evalKiller = new JuggOgnlEvalKiller(beanLoader);
 
         List<IJuggInterceptor> handlers = Lists.newArrayList(//
                 context -> logger.info("scope start, command: {}", context.getCommand()), new JuggAliasHandler(beanLoader), //
@@ -93,11 +93,11 @@ public final class JuggServerExample {
      * for test
      */
     @SuppressWarnings({ "unused", "WeakerAccess" })
-    static class TestBean {
+    public static class TestBean {
 
         private String value = "";
 
-        public String getVal() {
+        private String getVal() {
             return value;
         }
 

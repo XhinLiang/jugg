@@ -248,11 +248,15 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <!-- eval parser -->
         <dependency>
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
             <version>3.2.10</version>
         </dependency>
+        <!-- eval parser -->
+
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
