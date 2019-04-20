@@ -19,7 +19,7 @@ import com.xhinliang.jugg.plugin.alias.JuggAliasHandler;
 import com.xhinliang.jugg.plugin.help.JuggHelpHandler;
 import com.xhinliang.jugg.plugin.history.JuggHistoryHandler;
 import com.xhinliang.jugg.plugin.insight.JuggInsightHandler;
-import com.xhinliang.jugg.plugin.mvel.preload.JuggPreloadHandler;
+import com.xhinliang.jugg.plugin.preload.JuggPreloadHandler;
 import com.xhinliang.jugg.websocket.JuggWebSocketServer;
 
 /**

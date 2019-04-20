@@ -1,4 +1,4 @@
-package com.xhinliang.jugg.plugin.mvel.preload;
+package com.xhinliang.jugg.plugin.preload;
 
 import java.util.List;
 
