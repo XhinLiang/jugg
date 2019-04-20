@@ -7,7 +7,6 @@ import java.util.function.Function;
 
 import org.mvel2.MVEL;
 
-import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.parse.IJuggEvalKiller;
 
@@ -41,11 +40,6 @@ public class JuggMvelEvalKiller implements IJuggEvalKiller {
                 return contextMap.computeIfAbsent(commandContext, (key) -> new JuggMvelContext(beanLoader));
             }
         };
-    }
-
-    @Override
-    public Object eval(CommandContext commandContext) {
-        return eval(commandContext.getCommand(), commandContext.getJuggUser().getUsername());
     }
 
     @Override

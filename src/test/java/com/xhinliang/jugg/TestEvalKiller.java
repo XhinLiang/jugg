@@ -19,7 +19,7 @@ public class TestEvalKiller {
     void testOgnl() {
         IJuggEvalKiller testCommandParser = genEvalKiller();
         CommandContext guestContext = new CommandContext(new JuggUser(), "#testBean.ping(113L)");
-        Object o = testCommandParser.eval(guestContext);
+        Object o = testCommandParser.eval(guestContext.getCommand(), guestContext.getJuggUser().getUsername());
         System.out.println(o);
         Assertions.assertEquals(113L, o);
     }
@@ -28,7 +28,7 @@ public class TestEvalKiller {
     void testMvel() {
         IJuggEvalKiller evalKiller = mvelEvalKiller();
         CommandContext guestContext = new CommandContext(new JuggUser(), "foreach (x : 9) { System.out.print(x); }");
-        Object o = evalKiller.eval(guestContext);
+        Object o = evalKiller.eval(guestContext.getCommand(), "guest");
         System.out.println(o);
         o = evalKiller.eval("s = 'abc'", "jugg");
         System.out.println(o);

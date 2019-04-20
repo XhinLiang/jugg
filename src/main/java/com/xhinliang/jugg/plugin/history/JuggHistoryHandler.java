@@ -52,8 +52,8 @@ public class JuggHistoryHandler implements IJuggHandler, JuggHelpable {
         String command = context.getCommand();
         String historyCommand = getHistoryCommand(command);
         if (historyCommand != null) {
-            CommandContext mockContext = new CommandContext(context.getJuggUser(), historyCommand);
-            return lineJoiner.join("", historyCommand, firstNonNull(getJsonLimited(evalKiller.eval(mockContext)), "null"));
+            return lineJoiner.join("", historyCommand,
+                    firstNonNull(getJsonLimited(evalKiller.eval(historyCommand, context.getJuggUser().getUsername())), "null"));
         }
 
         if (command.startsWith("history ")) {

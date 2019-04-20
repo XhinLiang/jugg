@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
-import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.parse.IJuggEvalKiller;
 
@@ -35,11 +34,6 @@ public class JuggOgnlEvalKiller implements IJuggEvalKiller {
                 return contextMap.computeIfAbsent(commandContext, (key) -> new JuggOgnlContext(beanLoader));
             }
         };
-    }
-
-    @Override
-    public Object eval(CommandContext commandContext) {
-        return eval(commandContext.getCommand(), commandContext.getJuggUser().getUsername());
     }
 
     @Override

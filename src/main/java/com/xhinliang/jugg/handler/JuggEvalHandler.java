@@ -23,7 +23,7 @@ public class JuggEvalHandler implements IJuggHandler, JuggHelpable {
 
     @Override
     public void handle(CommandContext context) {
-        String result = firstNonNull(getJsonLimited(evalKiller.eval(context)), "null");
+        String result = firstNonNull(getJsonLimited(evalKiller.eval(context.getCommand(), context.getJuggUser().getUsername())), "null");
         context.setResult(result);
     }
 
