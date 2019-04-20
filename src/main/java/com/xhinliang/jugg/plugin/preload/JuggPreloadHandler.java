@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.exception.JuggRuntimeException;
@@ -31,6 +32,13 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
 
     // map { username -> map { packageName -> isLoaded } }
     private final Map<String, Map<String, Boolean>> preloadedMap;
+
+    public JuggPreloadHandler(IJuggEvalKiller evalKiller) {
+        this(evalKiller, ImmutableList.<IJuggPreloader> builder() //
+                .add(new CollectionFunctionPreloader()) //
+                .build() //
+        );
+    }
 
     public JuggPreloadHandler(IJuggEvalKiller evalKiller, List<IJuggPreloader> preloaderList) {
         this.evalKiller = evalKiller;
@@ -72,11 +80,13 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
         Map<String, Boolean> userLoadedMap = preloadedMap.computeIfAbsent(username, k -> new ConcurrentHashMap<>());
         preloaderList.forEach((packageName, preloader) -> {
             if (userLoadedMap.getOrDefault(packageName, Boolean.FALSE)) {
-                String line = String.format("+ %s %s\n", preloader.packageName(), preloader.desc());
-                sb.append(line);
+                sb.append(String.format("+ %s -- %s\n", preloader.packageName(), preloader.desc()));
+                sb.append(String.format("  %s -> %s\n", preloader.sampleInput(), preloader.sampleOutput()));
+                sb.append("\n");
             } else {
-                String line = String.format("- %s %s\n", preloader.packageName(), preloader.desc());
-                sb.append(line);
+                sb.append(String.format("- %s %s\n", preloader.packageName(), preloader.desc()));
+                sb.append(String.format("  %s -> %s\n", preloader.sampleInput(), preloader.sampleOutput()));
+                sb.append("\n");
             }
         });
         return sb.toString();
@@ -100,6 +110,10 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
         preloadedMap.computeIfAbsent(username, k -> new ConcurrentHashMap<>()) //
                 .put(packageName, Boolean.TRUE);
         return String.format("preload: %s", packageName);
+    }
+
+    public Map<String, IJuggPreloader> getPreloaderList() {
+        return preloaderList;
     }
 
     @Override

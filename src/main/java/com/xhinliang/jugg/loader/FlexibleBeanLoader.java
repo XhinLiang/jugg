@@ -80,8 +80,8 @@ public abstract class FlexibleBeanLoader implements IBeanLoader {
                         .flatMap(Collection::stream) //
                         .collect(toSet())) //
                 .setScanners(new SubTypesScanner(false));
-        Reflections reflections = new Reflections(configuration);
 
+        Reflections reflections = new Reflections(configuration);
         Stream<String> anotherFqcnStream = reflections.getAllTypes().stream();
 
         Map<String, String> tempMap = Stream.concat(fqcnSet.stream(), anotherFqcnStream)

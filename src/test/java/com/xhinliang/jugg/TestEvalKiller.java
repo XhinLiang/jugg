@@ -1,13 +1,14 @@
 package com.xhinliang.jugg;
 
+import static com.xhinliang.jugg.MockBeanLoader.mvelEvalKiller;
+import static com.xhinliang.jugg.MockBeanLoader.ognlEvalKiller;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.xhinliang.jugg.context.CommandContext;
 import com.xhinliang.jugg.context.JuggUser;
 import com.xhinliang.jugg.parse.IJuggEvalKiller;
-import com.xhinliang.jugg.parse.mvel.JuggMvelEvalKiller;
-import com.xhinliang.jugg.parse.ognl.JuggOgnlEvalKiller;
 
 /**
  * @author xhinliang <xhinliang@gmail.com>
@@ -17,7 +18,7 @@ public class TestEvalKiller {
 
     @Test
     void testOgnl() {
-        IJuggEvalKiller testCommandParser = genEvalKiller();
+        IJuggEvalKiller testCommandParser = ognlEvalKiller();
         CommandContext guestContext = new CommandContext(new JuggUser(), "#testBean.ping(113L)");
         Object o = testCommandParser.eval(guestContext.getCommand(), guestContext.getJuggUser().getUsername());
         System.out.println(o);
@@ -40,11 +41,4 @@ public class TestEvalKiller {
         System.out.println(o);
     }
 
-    private IJuggEvalKiller genEvalKiller() {
-        return new JuggOgnlEvalKiller(new JuggServerExample.MockBeanLoader());
-    }
-
-    private IJuggEvalKiller mvelEvalKiller() {
-        return new JuggMvelEvalKiller(new JuggServerExample.MockBeanLoader());
-    }
 }

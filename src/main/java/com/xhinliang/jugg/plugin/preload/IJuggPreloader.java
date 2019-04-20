@@ -12,4 +12,8 @@ public interface IJuggPreloader {
     String packageName();
 
     String desc();
+
+    String sampleInput();
+
+    Object sampleOutput();
 }
