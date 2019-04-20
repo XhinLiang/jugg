@@ -17,7 +17,7 @@ public class JuggUser {
         this.login = login;
     }
 
-    public String getUserName() {
+    public String getUsername() {
         return userName;
     }
 

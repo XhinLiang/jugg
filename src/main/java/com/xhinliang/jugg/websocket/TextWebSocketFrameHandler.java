@@ -116,7 +116,7 @@ class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSocke
     public void channelInactive(ChannelHandlerContext context) {
         Channel removed = context.channel();
         JuggUser juggUser = userMap.remove(removed);
-        logger.info("juggUser:{} inactive", juggUser.getUserName());
+        logger.info("juggUser:{} inactive", juggUser.getUsername());
     }
 
     @Override

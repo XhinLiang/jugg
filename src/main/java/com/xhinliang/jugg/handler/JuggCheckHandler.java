@@ -19,7 +19,7 @@ public class JuggCheckHandler implements IJuggHandler {
     public void handle(CommandContext context) {
         boolean checkResult = checker.apply(context);
          if (!checkResult) {
-            String message = String.format("[system] command check failed, %s not allow call %s!", context.getJuggUser().getUserName(),
+            String message = String.format("[system] command check failed, %s not allow call %s!", context.getJuggUser().getUsername(),
                     context.getCommand());
             context.setResult(message);
             context.setShouldEnd(true);

@@ -1,5 +1,6 @@
 package com.xhinliang.jugg.parse.mvel;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -16,10 +17,22 @@ import com.xhinliang.jugg.parse.IJuggEvalKiller;
  */
 public class JuggMvelEvalKiller implements IJuggEvalKiller {
 
-    private Function<String, JuggMvelContext> contextSupplier;
+    private Function<String, JuggMvelContext> globalContextSupplier;
+
+    private Function<String, HashMap<String, Object>> localContextSupplier;
 
     public JuggMvelEvalKiller(IBeanLoader beanLoader) {
-        this.contextSupplier = new Function<String, JuggMvelContext>() {
+        this.globalContextSupplier = new Function<String, JuggMvelContext>() {
+
+            private ConcurrentMap<String, JuggMvelContext> contextMap = new ConcurrentHashMap<>();
+
+            @Override
+            public JuggMvelContext apply(String commandContext) {
+                return contextMap.computeIfAbsent(commandContext, (key) -> new JuggMvelContext(beanLoader));
+            }
+        };
+
+        this.localContextSupplier = new Function<String, HashMap<String, Object>>() {
 
             private ConcurrentMap<String, JuggMvelContext> contextMap = new ConcurrentHashMap<>();
 
@@ -32,12 +45,11 @@ public class JuggMvelEvalKiller implements IJuggEvalKiller {
 
     @Override
     public Object eval(CommandContext commandContext) {
-        return eval(commandContext.getCommand(), commandContext.getJuggUser().getUserName());
+        return eval(commandContext.getCommand(), commandContext.getJuggUser().getUsername());
     }
 
     @Override
     public Object eval(String command, String username) {
-        JuggMvelContext varsContext = contextSupplier.apply(username);
-        return MVEL.eval(command, varsContext, varsContext);
+        return MVEL.eval(command, localContextSupplier.apply(username), globalContextSupplier.apply(username));
     }
 }

@@ -39,7 +39,7 @@ public class JuggOgnlEvalKiller implements IJuggEvalKiller {
 
     @Override
     public Object eval(CommandContext commandContext) {
-        return eval(commandContext.getCommand(), commandContext.getJuggUser().getUserName());
+        return eval(commandContext.getCommand(), commandContext.getJuggUser().getUsername());
     }
 
     @Override

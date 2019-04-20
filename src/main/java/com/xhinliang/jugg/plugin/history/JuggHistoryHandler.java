@@ -59,16 +59,16 @@ public class JuggHistoryHandler implements IJuggHandler, JuggHelpable {
         if (command.startsWith("history ")) {
             String[] spliced = command.split(" ");
             if (spliced.length == 2) {
-                return handleSearchHistory(context.getJuggUser().getUserName(), spliced);
+                return handleSearchHistory(context.getJuggUser().getUsername(), spliced);
             } else {
                 throw new JuggRuntimeException("[system] history syntax error!");
             }
         }
 
         if (command.equals("history")) {
-            return handleAllHistory(context.getJuggUser().getUserName());
+            return handleAllHistory(context.getJuggUser().getUsername());
         } else {
-            historyService.addHistory(context.getJuggUser().getUserName(), command);
+            historyService.addHistory(context.getJuggUser().getUsername(), command);
             return null;
         }
     }

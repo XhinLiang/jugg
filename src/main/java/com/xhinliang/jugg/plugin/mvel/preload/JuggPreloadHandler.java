@@ -29,7 +29,7 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
 
     private final Map<String, IJuggPreloader> preloaderList;
 
-    // map { username -> map{ packageName -> isLoaded } }
+    // map { username -> map { packageName -> isLoaded } }
     private final Map<String, Map<String, Boolean>> preloadedMap;
 
     public JuggPreloadHandler(IJuggEvalKiller evalKiller, List<IJuggPreloader> preloaderList) {
@@ -52,13 +52,13 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
         String command = context.getCommand();
 
         if (command.equals("preload list")) {
-            return list(context.getJuggUser().getUserName());
+            return list(context.getJuggUser().getUsername());
         }
 
         if (command.startsWith("preload ")) {
             String[] spliced = command.split(" ");
             if (spliced.length == 2) {
-                return preload(context.getJuggUser().getUserName(), spliced[1]);
+                return preload(context.getJuggUser().getUsername(), spliced[1]);
             } else {
                 throw new JuggRuntimeException("[system] preload syntax error!");
             }
