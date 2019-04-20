@@ -13,4 +13,6 @@ public interface IJuggEvalKiller {
      * @return eval result.
      */
     Object eval(CommandContext commandContext);
+
+    Object eval(String command, String username);
 }

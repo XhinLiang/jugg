@@ -1,7 +1,5 @@
 package com.xhinliang.jugg.parse.mvel;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -18,27 +16,28 @@ import com.xhinliang.jugg.parse.IJuggEvalKiller;
  */
 public class JuggMvelEvalKiller implements IJuggEvalKiller {
 
-    private JuggMvelContext globalContext;
-
-    private Function<String, HashMap<String, Object>> localContextSupplier;
+    private Function<String, JuggMvelContext> contextSupplier;
 
     public JuggMvelEvalKiller(IBeanLoader beanLoader) {
-        this.globalContext = new JuggMvelContext(beanLoader);
-        this.localContextSupplier = new Function<String, HashMap<String, Object>>() {
+        this.contextSupplier = new Function<String, JuggMvelContext>() {
 
-            private ConcurrentMap<String, HashMap<String, Object>> contextMap = new ConcurrentHashMap<>();
+            private ConcurrentMap<String, JuggMvelContext> contextMap = new ConcurrentHashMap<>();
 
             @Override
-            public HashMap<String, Object> apply(String commandContext) {
-                return contextMap.computeIfAbsent(commandContext, (key) -> new HashMap<>());
+            public JuggMvelContext apply(String commandContext) {
+                return contextMap.computeIfAbsent(commandContext, (key) -> new JuggMvelContext(beanLoader));
             }
         };
     }
 
     @Override
     public Object eval(CommandContext commandContext) {
-        String command = commandContext.getCommand();
-        Map map = localContextSupplier.apply(commandContext.getJuggUser().getUserName());
-        return MVEL.eval(command, map, globalContext);
+        return eval(commandContext.getCommand(), commandContext.getJuggUser().getUserName());
+    }
+
+    @Override
+    public Object eval(String command, String username) {
+        JuggMvelContext varsContext = contextSupplier.apply(username);
+        return MVEL.eval(command, varsContext, varsContext);
     }
 }

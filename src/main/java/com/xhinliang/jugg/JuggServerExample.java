@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.xhinliang.jugg.handler.IJuggInterceptor;
 import com.xhinliang.jugg.handler.JuggEvalHandler;
@@ -18,6 +19,7 @@ import com.xhinliang.jugg.plugin.alias.JuggAliasHandler;
 import com.xhinliang.jugg.plugin.help.JuggHelpHandler;
 import com.xhinliang.jugg.plugin.history.JuggHistoryHandler;
 import com.xhinliang.jugg.plugin.insight.JuggInsightHandler;
+import com.xhinliang.jugg.plugin.mvel.preload.JuggPreloadHandler;
 import com.xhinliang.jugg.websocket.JuggWebSocketServer;
 
 /**
@@ -58,6 +60,7 @@ public final class JuggServerExample {
                 context -> logger.info("scope start, command: {}", context.getCommand()), new JuggAliasHandler(beanLoader), //
                 new JuggInsightHandler(beanLoader::getFqcnBySimpleClassName, evalKiller), //
                 new JuggHistoryHandler(evalKiller), //
+                new JuggPreloadHandler(evalKiller, ImmutableList.of()),
                 new JuggEvalHandler(evalKiller), //
                 context -> logger.info("scope end"));
 

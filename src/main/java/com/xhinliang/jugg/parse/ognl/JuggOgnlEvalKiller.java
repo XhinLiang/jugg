@@ -39,10 +39,14 @@ public class JuggOgnlEvalKiller implements IJuggEvalKiller {
 
     @Override
     public Object eval(CommandContext commandContext) {
-        Map localContext = localContextSupplier.apply(commandContext.getJuggUser().getUserName());
+        return eval(commandContext.getCommand(), commandContext.getJuggUser().getUserName());
+    }
+
+    @Override
+    public Object eval(String command, String username) {
+        Map localContext = localContextSupplier.apply(username);
         try {
-            Object result = Ognl.getValue(commandContext.getCommand(), globalContext, localContext);
-            return result;
+            return Ognl.getValue(command, globalContext, localContext);
         } catch (OgnlException e) {
             throw new RuntimeException(firstNonNull(e.getReason(), e));
         }
