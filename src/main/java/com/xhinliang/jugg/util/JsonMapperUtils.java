@@ -4,12 +4,14 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 
 import javax.annotation.Nullable;
 
+import org.mvel2.ast.Function;
 import org.mvel2.ast.FunctionInstance;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.google.common.base.Joiner;
 import com.hubspot.jackson.datatype.protobuf.ProtobufModule;
 
 /**
@@ -18,6 +20,8 @@ import com.hubspot.jackson.datatype.protobuf.ProtobufModule;
 public final class JsonMapperUtils {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private static final Joiner JOINER = Joiner.on(", ");
 
     static {
         MAPPER.disable(FAIL_ON_UNKNOWN_PROPERTIES);
@@ -31,7 +35,8 @@ public final class JsonMapperUtils {
             return "null";
         }
         if (obj instanceof FunctionInstance) {
-            return "function: " + ((FunctionInstance) obj).getFunction().toString();
+            Function function = ((FunctionInstance) obj).getFunction();
+            return String.format("function %s(%s)", function.getName(), JOINER.join(function.getParameters()));
         }
         try {
             return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
