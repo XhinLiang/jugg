@@ -36,7 +36,7 @@ public final class JsonMapperUtils {
         }
         if (obj instanceof FunctionInstance) {
             Function function = ((FunctionInstance) obj).getFunction();
-            return String.format("function %s(%s)", function.getName(), JOINER.join(function.getParameters()));
+            return new String(function.getExpr());
         }
         try {
             return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);

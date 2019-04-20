@@ -76,7 +76,7 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
     }
 
     private String list(String username) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("list of preloaders\n");
         Map<String, Boolean> userLoadedMap = preloadedMap.computeIfAbsent(username, k -> new ConcurrentHashMap<>());
         preloaderList.forEach((packageName, preloader) -> {
             if (userLoadedMap.getOrDefault(packageName, Boolean.FALSE)) {

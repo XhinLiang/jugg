@@ -14,15 +14,15 @@ public class CollectionFunctionPreloader implements IJuggPreloader {
     public List<String> getScripts() {
         return ImmutableList.<String> builder() //
                 .add("" //
-                        + "def filterToList(tempCollection, tempFilterFun) { " //
-                        + "    tempResult = []; " //
-                        + "    foreach (item : tempCollection) { " //
-                        + "        if (tempFilterFun(item)) { " //
-                        + "            tempResult.add(item); " //
-                        + "        } " //
-                        + "    } " //
-                        + "    return tempResult;" //
-                        + "} ")
+                        + "def filterToList(tempCollection, tempFilterFun) {\n" //
+                        + "    tempResult = [];\n" //
+                        + "    foreach (item : tempCollection) {\n" //
+                        + "        if (tempFilterFun(item)) {\n" //
+                        + "            tempResult.add(item);\n" //
+                        + "        }\n" //
+                        + "    }\n" //
+                        + "    return tempResult;\n" //
+                        + "}\n")
                 .build();
     }
 
