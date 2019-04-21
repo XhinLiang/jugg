@@ -1,9 +1,12 @@
 package com.xhinliang.jugg.parse.mvel;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
+
+import javax.annotation.Nonnull;
 
 import org.mvel2.MVEL;
 
@@ -44,6 +47,13 @@ public class JuggMvelEvalKiller implements IJuggEvalKiller {
 
     @Override
     public Object eval(String command, String username) {
-        return MVEL.eval(command, localContextSupplier.apply(username), globalContextSupplier.apply(username));
+        // localContext 貌似现在没啥用的
+        return MVEL.eval(command, localContextSupplier.apply(username), getContext(username));
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, Object> getContext(String username) {
+        return globalContextSupplier.apply(username);
     }
 }

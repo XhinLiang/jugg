@@ -1,5 +1,9 @@
 package com.xhinliang.jugg.parse;
 
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 /**
  * @author xhinliang <xhinliang@gmail.com>
  */
@@ -11,4 +15,7 @@ public interface IJuggEvalKiller {
      * @return eval result.
      */
     Object eval(String command, String username);
+
+    @Nonnull
+    Map getContext(String username);
 }

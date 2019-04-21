@@ -11,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.google.common.base.Joiner;
 import com.hubspot.jackson.datatype.protobuf.ProtobufModule;
 
 /**
@@ -20,8 +19,6 @@ import com.hubspot.jackson.datatype.protobuf.ProtobufModule;
 public final class JsonMapperUtils {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-
-    private static final Joiner JOINER = Joiner.on(", ");
 
     static {
         MAPPER.disable(FAIL_ON_UNKNOWN_PROPERTIES);

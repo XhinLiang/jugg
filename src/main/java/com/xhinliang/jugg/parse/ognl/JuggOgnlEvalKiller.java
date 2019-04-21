@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
+import javax.annotation.Nonnull;
+
 import com.xhinliang.jugg.loader.IBeanLoader;
 import com.xhinliang.jugg.parse.IJuggEvalKiller;
 
@@ -38,11 +40,16 @@ public class JuggOgnlEvalKiller implements IJuggEvalKiller {
 
     @Override
     public Object eval(String command, String username) {
-        Map localContext = localContextSupplier.apply(username);
         try {
-            return Ognl.getValue(command, globalContext, localContext);
+            return Ognl.getValue(command, globalContext, getContext(username));
         } catch (OgnlException e) {
             throw new RuntimeException(firstNonNull(e.getReason(), e));
         }
+    }
+
+    @Nonnull
+    @Override
+    public Map getContext(String username) {
+        return localContextSupplier.apply(username);
     }
 }
