@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,11 +54,16 @@ public class JuggEvalDumpServiceImpl implements JuggEvalDumpService {
     private final Kryo kryo = new KryoReflectionFactorySupport();
     private final Output output = new Output(KRYO_OUTPUT_BUFFER);
 
-    {
-        kryo.setRegistrationRequired(false);
+    private static final JuggEvalDumpService INSTANCE = new JuggEvalDumpServiceImpl();
+
+    public JuggEvalDumpServiceImpl() {
+        init();
     }
 
-    private static final JuggEvalDumpService INSTANCE = new JuggEvalDumpServiceImpl();
+    @PostConstruct
+    public void init() {
+        kryo.setRegistrationRequired(false);
+    }
 
     public static JuggEvalDumpService getInstance() {
         return INSTANCE;
