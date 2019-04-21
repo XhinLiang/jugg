@@ -39,6 +39,8 @@ public class TestEvalKiller {
         System.out.println(o);
         o = evalKiller.eval("testBean.value", "jugg");
         System.out.println(o);
+        o = evalKiller.eval("System.out.println('abcdccc')", "jugg");
+        System.out.println(o);
     }
 
 }
