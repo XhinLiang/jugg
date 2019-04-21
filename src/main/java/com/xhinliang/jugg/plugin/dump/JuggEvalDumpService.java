@@ -1,5 +1,6 @@
 package com.xhinliang.jugg.plugin.dump;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,4 +16,6 @@ public interface JuggEvalDumpService {
     Map<String, Object> load(String username, long id);
 
     List<Long> list(String username);
+
+    boolean dropDb() throws IOException;
 }
