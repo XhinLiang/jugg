@@ -63,11 +63,7 @@ public class JuggOgnlContext extends OgnlContext {
             return true;
         }
         Object bean = getBean(key);
-        if (bean != null) {
-            super.put(key, bean);
-            return true;
-        }
-        return false;
+        return bean != null;
     }
 
     @Override

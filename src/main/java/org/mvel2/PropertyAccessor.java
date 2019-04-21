@@ -947,12 +947,12 @@ public class PropertyAccessor {
              * Invoke the target method and return the response.
              */
             currType = toNonPrimitiveType(m.getReturnType());
+            m.setAccessible(true);
             try {
                 return m.invoke(ctx, normalizeArgsForVarArgs(parameterTypes, args, m.isVarArgs()));
             } catch (IllegalAccessException e) {
                 try {
                     addMethodCache(cls, createSignature(name, tk), (m = getWidenedTarget(m)));
-
                     return m.invoke(ctx, args);
                 } catch (Exception e2) {
                     throw new PropertyAccessException("unable to invoke method: " + name, property, cursor, e2, pCtx);

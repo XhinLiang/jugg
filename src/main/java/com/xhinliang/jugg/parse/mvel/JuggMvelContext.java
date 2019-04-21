@@ -28,11 +28,7 @@ public class JuggMvelContext extends HashMap<String, Object> {
             return true;
         }
         Object bean = getBean(key);
-        if (bean != null) {
-            super.put(key, bean);
-            return true;
-        }
-        return false;
+        return bean != null;
     }
 
     @Override
