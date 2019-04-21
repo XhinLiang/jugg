@@ -70,7 +70,7 @@ public class JuggEvalDumpServiceImpl implements JuggEvalDumpService {
     }
 
     @Override
-    public void save(String username, Map<String, Object> context) {
+    public long save(String username, Map<String, Object> context) {
         NitriteCollection collection = getCollection(username);
 
         long timestamp = currentTimeMillis();
@@ -86,6 +86,7 @@ public class JuggEvalDumpServiceImpl implements JuggEvalDumpService {
         });
 
         database.commit();
+        return timestamp;
     }
 
     @Override

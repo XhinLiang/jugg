@@ -1,8 +1,7 @@
 package com.xhinliang.jugg.plugin.dump;
 
-import static java.time.Instant.ofEpochMilli;
-
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +22,9 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
 
     private final IJuggEvalKiller evalKiller;
 
-    private JuggEvalDumpService contextDumpService;
+    private JuggEvalDumpService contextDumpService = JuggEvalDumpServiceImpl.getInstance();
 
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+    private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     public JuggDumpHandler(IJuggEvalKiller evalKiller) {
         this.evalKiller = evalKiller;
@@ -42,6 +41,10 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
     @Nullable
     public String generateResult(CommandContext context) {
         String command = context.getCommand();
+
+        if (command.equals("dump save")) {
+            return save(context.getJuggUser().getUsername());
+        }
 
         if (command.equals("dump list")) {
             return list(context.getJuggUser().getUsername());
@@ -78,20 +81,27 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
         return sb.toString();
     }
 
+    private String save(String username) {
+        Map context = evalKiller.getContext(username);
+        // noinspection unchecked
+        long id = contextDumpService.save(username, context);
+        return "saved  " + id + ".";
+    }
+
     private String load(String username, String id) {
         Map loadedContext = contextDumpService.load(username, Long.parseLong(id));
         // noinspection unchecked
         evalKiller.getContext(username).putAll(loadedContext);
-        return "";
+        return "loaded " + id + ".";
     }
 
     private String remove(String username, String id) {
         contextDumpService.remove(username, Long.parseLong(id));
-        return "remove file " + id;
+        return "remove " + id;
     }
 
     private String timeToString(long timeMillis) {
-        return dateTimeFormatter.format(ofEpochMilli(timeMillis));
+        return dateTimeFormatter.format(new Date(timeMillis));
     }
 
     @Override

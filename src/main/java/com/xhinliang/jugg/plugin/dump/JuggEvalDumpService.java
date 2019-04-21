@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public interface JuggEvalDumpService {
 
-    void save(String username, Map<String, Object> values);
+    long save(String username, Map<String, Object> values);
 
     void remove(String username, long id);
 
