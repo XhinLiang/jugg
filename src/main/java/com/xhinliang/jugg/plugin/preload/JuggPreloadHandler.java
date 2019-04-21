@@ -12,6 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.xhinliang.jugg.context.CommandContext;
@@ -26,9 +29,10 @@ import com.xhinliang.jugg.plugin.help.JuggHelpable;
  */
 public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
 
+    private static final Logger logger = LoggerFactory.getLogger(JuggPreloadHandler.class);
     private final IJuggEvalKiller evalKiller;
 
-    private final Map<String, IJuggPreloader> preloaderList;
+    private final Map<String, IJuggPreloader> preloaderMap;
 
     // map { username -> map { packageName -> isLoaded } }
     private final Map<String, Map<String, Boolean>> preloadedMap;
@@ -42,8 +46,12 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
 
     public JuggPreloadHandler(IJuggEvalKiller evalKiller, List<IJuggPreloader> preloaderList) {
         this.evalKiller = evalKiller;
-        this.preloaderList = preloaderList.stream() //
-                .collect(toMap(IJuggPreloader::packageName, identity()));
+        this.preloaderMap = preloaderList.stream() //
+                .collect(toMap(IJuggPreloader::packageName, identity(), (a, b) -> {
+                    logger.info("IJuggPreloader duplicated a:{}, b:{}", a.packageName(), b.packageName());
+                    logger.info("list:{}", preloaderList);
+                    return a;
+                }));
         this.preloadedMap = new ConcurrentHashMap<>();
     }
 
@@ -78,7 +86,7 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
     private String list(String username) {
         StringBuilder sb = new StringBuilder("list of preloaders\n");
         Map<String, Boolean> userLoadedMap = preloadedMap.computeIfAbsent(username, k -> new ConcurrentHashMap<>());
-        preloaderList.forEach((packageName, preloader) -> {
+        preloaderMap.forEach((packageName, preloader) -> {
             if (userLoadedMap.getOrDefault(packageName, Boolean.FALSE)) {
                 sb.append(String.format("+ %s -- %s\n", preloader.packageName(), preloader.desc()));
                 sb.append(String.format("  %s -> %s\n", preloader.sampleInput(), preloader.sampleOutput()));
@@ -93,7 +101,7 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
     }
 
     private String preload(String username, String packageName) {
-        List<String> scripts = Optional.ofNullable(preloaderList.get(packageName)).map(IJuggPreloader::getScripts) //
+        List<String> scripts = Optional.ofNullable(preloaderMap.get(packageName)).map(IJuggPreloader::getScripts) //
                 .orElse(emptyList());
 
         if (isEmpty(scripts)) {
@@ -112,8 +120,8 @@ public class JuggPreloadHandler implements IJuggHandler, JuggHelpable {
         return String.format("preload: %s", packageName);
     }
 
-    public Map<String, IJuggPreloader> getPreloaderList() {
-        return preloaderList;
+    public Map<String, IJuggPreloader> getPreloaderMap() {
+        return preloaderMap;
     }
 
     @Override

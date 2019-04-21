@@ -18,7 +18,7 @@ public class TestPreloadPlugin {
         IJuggEvalKiller evalKiller = mvelEvalKiller();
         JuggPreloadHandler juggPreloadHandler = new JuggPreloadHandler(evalKiller);
 
-        juggPreloadHandler.getPreloaderList() //
+        juggPreloadHandler.getPreloaderMap() //
                 .forEach((name, preloader) -> {
                     Assertions.assertEquals(name, preloader.packageName());
 

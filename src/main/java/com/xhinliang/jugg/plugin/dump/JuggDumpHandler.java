@@ -106,7 +106,7 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
 
     @Override
     public String name() {
-        return "preload";
+        return "dump";
     }
 
     @Override
