@@ -13,7 +13,7 @@ Feed easy to use `Jugg` to debug your Java's program as enjoyable as `Python REP
 <dependency>
     <groupId>com.xhinliang</groupId>
     <artifactId>jugg</artifactId>
-    <version>2.0.8</version>
+    <version>2.1.3</version>
     <exclusions>
         <exclusion>
             <groupId>org.slf4j</groupId>
