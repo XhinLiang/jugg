@@ -206,7 +206,7 @@ done
 ### Clients
 
 `Jugg` use plain text `WebSocket` protocol as `Java REPL`.
-So any `WebSocket` client can be used directly  in theory, even of `wsdump.py`.
+So any `WebSocket` client can be used directly, even of [`wsdump.py`](https://github.com/websocket-client/websocket-client/blob/master/bin/wsdump.py).
 
 We have two offical client now
 - `web` a web client implement by `React`.
