@@ -51,7 +51,7 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
         }
 
         if (command.equals("dump current")) {
-            return list(context.getJuggUser().getUsername());
+            return current(context.getJuggUser().getUsername());
         }
 
         if (command.startsWith("dump rm")) {
