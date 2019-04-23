@@ -50,6 +50,10 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
             return list(context.getJuggUser().getUsername());
         }
 
+        if (command.equals("dump current")) {
+            return list(context.getJuggUser().getUsername());
+        }
+
         if (command.startsWith("dump rm")) {
             String[] spliced = command.split(" ");
             if (spliced.length == 3) {
@@ -81,18 +85,27 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
         return sb.toString();
     }
 
+    private String current(String username) {
+        Map context = evalKiller.getContext(username);
+        // noinspection unchecked
+        StringBuilder sb = new StringBuilder("current context\n");
+        // noinspection unchecked
+        context.forEach((key, value) -> sb.append(key).append(" -> ").append(value.getClass().getCanonicalName()));
+        return sb.toString();
+    }
+
     private String save(String username) {
         Map context = evalKiller.getContext(username);
         // noinspection unchecked
         long id = contextDumpService.save(username, context);
-        return "saved  " + id + ".";
+        return "saved  " + id;
     }
 
     private String load(String username, String id) {
         Map loadedContext = contextDumpService.load(username, Long.parseLong(id));
         // noinspection unchecked
         evalKiller.getContext(username).putAll(loadedContext);
-        return "loaded " + id + ".";
+        return "loaded " + id;
     }
 
     private String remove(String username, String id) {
@@ -113,8 +126,10 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
     public Map<String, String> patternToMessage() {
         return ImmutableMap.<String, String> builder() //
                 .put("dump list", "list available files.") //
-                .put("dump load {{fileName}}", "load file.") //
-                .put("dump rm {{fileName}}", "rm file.") //
+                .put("dump save", "save current context.") //
+                .put("dump load {{id}}", "load saved context by id.") //
+                .put("dump rm {{id}}", "rm saved context.") //
+                .put("dump current", "show current context.") //
                 .build();
     }
 }
