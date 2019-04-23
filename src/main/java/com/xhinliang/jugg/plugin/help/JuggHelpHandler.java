@@ -65,6 +65,7 @@ public class JuggHelpHandler implements IJuggHandler, JuggHelpable {
             sb.append(name).append("\n");
             helpable.patternToMessage()
                     .forEach((pattern, message) -> sb.append(String.format("%-30s  --- %s", pattern, message)).append("\n"));
+            sb.append("\n");
         });
         return sb.toString();
     }
