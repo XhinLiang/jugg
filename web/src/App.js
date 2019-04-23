@@ -68,25 +68,12 @@ class App extends Component {
       if (message.startsWith("connect ")) {
         let splitStr = message.split(" ");
         if (splitStr.length !== 2) {
-          oChild.clientLog("connect command not match! Should be 'connect youWsUrl'");
+          oChild.clientLog("connect command not match! Should be 'connect WsUrl'");
         } else {
           let wsUrl = splitStr[1];
           oChild.fireClient = createFireClient(oChild, wsUrl);
         }
         // should always enter line.
-        oChild.enterLine();
-        return;
-      }
-
-      if (message == "help") {
-
-        oChild.clientLog('jugg is a Java REPL, you can eval your Java Code but don\'t be EVIL!');
-        oChild.log(" ");
-        oChild.log("connect youWsUrl                         ==== connect another WebSocketServer");
-        oChild.log("login username password                  ==== login with your userName and password");
-        oChild.log(" ");
-        oChild.log("bean.method()                            ==== call bean method without param");
-        oChild.log("bean.m(xxx)                              ==== call bean method with param xxx (auto detect type)");
         oChild.enterLine();
         return;
       }
@@ -102,6 +89,7 @@ class App extends Component {
     oChild.log = function (text) {
       if (oChild.console) {
         oChild.console.log(text);
+        oChild.console.scrollToBottom();
       }
     };
 
