@@ -90,7 +90,7 @@ public class JuggDumpHandler implements IJuggHandler, JuggHelpable {
         // noinspection unchecked
         StringBuilder sb = new StringBuilder("current context\n");
         // noinspection unchecked
-        context.forEach((key, value) -> sb.append(key).append(" -> ").append(value.getClass().getCanonicalName()));
+        context.forEach((key, value) -> sb.append(key).append(" -> ").append(value.getClass().getCanonicalName()).append("\n"));
         return sb.toString();
     }
 
