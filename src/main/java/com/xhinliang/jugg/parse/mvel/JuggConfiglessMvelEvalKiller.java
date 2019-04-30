@@ -32,6 +32,23 @@ public class JuggConfiglessMvelEvalKiller implements IJuggEvalKiller {
         return eval(command);
     }
 
+    public Object evalWithoutContext(String command) {
+        Map<String, Object> systemContext = new HashMap<>();
+        globalContext.forEach((key, val) -> {
+            if (key.equals("getBeanByName")) {
+                systemContext.put(key, val);
+            }
+            if (key.equals("getClassByName")) {
+                systemContext.put(key, val);
+            }
+            if (key.equals("getBeanByClass")) {
+                systemContext.put(key, val);
+            }
+        });
+        Map<String, Object> tempContext = new HashMap<>();
+        return MVEL.eval(command, tempContext, systemContext);
+    }
+
     @Nonnull
     @Override
     public Map getContext(String username) {

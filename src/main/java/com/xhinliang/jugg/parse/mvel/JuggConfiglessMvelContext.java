@@ -42,7 +42,7 @@ public class JuggConfiglessMvelContext extends HashMap<String, Object> {
         }
         Object bean = null;
         if (this.containsKey("getBeanByName")) {
-            bean = evalKiller.eval(String.format("getBeanByName(\"%s\")", beanName));
+            bean = evalKiller.evalWithoutContext(String.format("getBeanByName(\"%s\")", beanName));
         }
         Class<?> clazz = null;
         if (bean == null) {
@@ -50,10 +50,10 @@ public class JuggConfiglessMvelContext extends HashMap<String, Object> {
                 // clazz = beanLoader.getClassByName(beanName);
                 String getClassEvalString = String.format("getClassByName(\"%s\")", beanName);
                 if (this.containsKey("getClassByName")) {
-                    clazz = (Class<?>) evalKiller.eval(getClassEvalString);
+                    clazz = (Class<?>) evalKiller.evalWithoutContext(getClassEvalString);
                     if (this.containsKey("getBeanByClass")) {
                         // bean = beanLoader.getBeanByClass(clazz);
-                        bean = evalKiller.eval(String.format("getBeanByClass(%s)", getClassEvalString));
+                        bean = evalKiller.evalWithoutContext(String.format("getBeanByClass(%s)", getClassEvalString));
                     }
                 } else {
                     clazz = Class.forName(beanName);
