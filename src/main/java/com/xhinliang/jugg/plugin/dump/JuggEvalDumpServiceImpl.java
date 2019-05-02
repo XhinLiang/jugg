@@ -29,10 +29,10 @@ import org.dizitart.no2.SortOrder;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.phantomthief.tuple.Tuple;
+import com.github.phantomthief.tuple.TwoTuple;
 
 import de.javakaffee.kryoserializers.KryoReflectionFactorySupport;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
 
 /**
  * @author xhinliang
@@ -106,20 +106,20 @@ public class JuggEvalDumpServiceImpl implements JuggEvalDumpService {
                     }
                     Object val = d.get("fieldValue");
                     if (val != null) {
-                        return Tuples.of(fieldName, val);
+                        return Tuple.tuple(fieldName, val);
                     }
                     byte[] bytes = (byte[]) d.get("fieldBytes");
                     Class<?> clazz = (Class<?>) d.get("fieldClass");
                     if (ArrayUtils.isNotEmpty(bytes) && clazz != null) {
                         Object obj = fromBytes(clazz, bytes);
                         if (obj != null) {
-                            return Tuples.of(fieldName, obj);
+                            return Tuple.tuple(fieldName, obj);
                         }
                     }
                     return null;
                 }) //
                 .filter(Objects::nonNull) //
-                .collect(toMap(Tuple2::getT1, Tuple2::getT2, (a, b) -> a));
+                .collect(toMap(TwoTuple::getFirst, TwoTuple::getSecond, (a, b) -> a));
     }
 
     @Override
